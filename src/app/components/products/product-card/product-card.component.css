@@ -1,0 +1,92 @@
+.product-card {
+  background: white;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  max-width: 180px;
+  
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.product-image {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+}
+
+.product-info {
+  padding: 0.75rem;
+}
+
+.product-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.25rem;
+}
+
+h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: #2c3e50;
+}
+
+.rating {
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.stars {
+  color: #f1c40f;
+  margin-right: 2px;
+}
+
+.restaurant {
+  color: #4CAF50;
+  font-size: 0.8rem;
+  margin: 0 0 0.25rem 0;
+}
+
+.description {
+  color: #666;
+  font-size: 0.8rem;
+  margin: 0 0 0.75rem 0;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.product-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.price {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.order-btn {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 0.8rem;
+}
+
+.order-btn:hover {
+  background: #45a049;
+} 

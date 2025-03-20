@@ -10,7 +10,7 @@ export const authGuard = () => {
     return true;
   }
 
-  // Redirect to login page
-  router.navigate(['/login']);
+  // Redirect to home page where the login button is available
+  router.navigate(['/']);
   return false;
 }; 
