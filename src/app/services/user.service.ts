@@ -2,7 +2,12 @@ import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { Observable } from 'rxjs';
 import { environment } from '../config';
-import { User, UserProfileUpdateDto, SellerProfileUpdateDto } from '../models/user.model';
+import { User, UserProfileUpdateDto, SellerProfileUpdateDto, StoreDetails } from '../models/user.model';
+
+interface BecomeSellerResponse {
+  message: string;
+  user: User;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -22,8 +27,15 @@ export class UserService {
         return this.apiService.put(`${environment.baseAPIUrl}User/profile`, profile);
     }
 
-    becomeSeller(): Observable<any> {
-        return this.apiService.post(`${environment.baseAPIUrl}User/become-seller`, {});
+    becomeSeller(storeDetails: StoreDetails): Observable<BecomeSellerResponse> {
+        // Create a UserServiceDto structure
+        const userDto = {
+            sellerProfile: {
+                storeName: storeDetails.storeName,
+                storeDescription: storeDetails.storeDescription
+            }
+        };
+        return this.apiService.post<BecomeSellerResponse>(`${environment.baseAPIUrl}User/become-seller`, userDto);
     }
 
     updateSellerProfile(profile: SellerProfileUpdateDto): Observable<any> {

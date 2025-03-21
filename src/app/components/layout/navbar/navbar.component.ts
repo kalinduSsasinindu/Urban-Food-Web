@@ -1,13 +1,16 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { AuthService } from '../../../services/authentication/auth.service';
+import { UserService } from '../../../services/user.service';
 import { FormsModule } from '@angular/forms';
+import { StoreDetailsModalComponent } from '../../store-details-modal/store-details-modal.component';
+import { StoreDetails } from '../../../models/user.model';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, StoreDetailsModalComponent],
   template: `
     <nav class="navbar">
       <div class="nav-left">
@@ -26,7 +29,7 @@ import { FormsModule } from '@angular/forms';
         </div>
       </div>
       <div class="nav-right">
-        <button class="nav-btn become-seller-btn" (click)="becomeSeller()">Become a Seller</button>
+        <button class="nav-btn become-seller-btn" (click)="navigateToBecomeSeller()">Become a Seller</button>
         <ng-container *ngIf="isLoggedIn; else authButtons">
           <a routerLink="/profile" class="nav-btn">Profile</a>
           <button class="nav-btn" (click)="logout()">Logout</button>
@@ -37,13 +40,24 @@ import { FormsModule } from '@angular/forms';
         </ng-template>
       </div>
     </nav>
+
+    <app-store-details-modal 
+      *ngIf="showModal"
+      (closeModal)="closeModal()"
+      (submitStoreDetails)="onSubmitStoreDetails($event)"
+    ></app-store-details-modal>
   `,
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
   searchQuery: string = '';
+  showModal: boolean = false;
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private userService: UserService,
+    private router: Router
+  ) {}
 
   get isLoggedIn(): boolean {
     return !!sessionStorage.getItem('access_token');
@@ -69,8 +83,31 @@ export class NavbarComponent {
     console.log('Sign up clicked');
   }
 
-  becomeSeller() {
-    // TODO: Implement become seller functionality
-    console.log('Become seller clicked');
+  navigateToBecomeSeller() {
+    this.router.navigate(['/become-seller']);
+  }
+
+  showBecomeSellerModal() {
+    if (!this.isLoggedIn) {
+      this.login();
+      return;
+    }
+    this.showModal = true;
+  }
+
+  closeModal() {
+    this.showModal = false;
+  }
+
+  onSubmitStoreDetails(storeDetails: StoreDetails) {
+    this.userService.becomeSeller(storeDetails).subscribe({
+      next: (response) => {
+        console.log('Successfully became a seller:', response.message);
+        window.location.reload(); // Refresh to update the UI
+      },
+      error: (error) => {
+        console.error('Error becoming a seller:', error);
+      }
+    });
   }
 } 
