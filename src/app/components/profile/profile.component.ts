@@ -28,13 +28,25 @@ import { firstValueFrom } from 'rxjs';
           <div class="detail-item" *ngIf="user.address">
             <label>Address:</label>
             <span>
-              {{ user.address.street }}, {{ user.address.city }},
-              {{ user.address.state }} {{ user.address.zipCode }}
+              {{ user.address?.street }}, {{ user.address?.city }},
+              {{ user.address?.state }} {{ user.address?.zipCode }}
             </span>
           </div>
-          <div class="detail-item" *ngIf="user.userRole === 'Seller'">
+          <div class="detail-item" *ngIf="user.userRole === 'Seller' && user.sellerProfile?.storeDetails">
             <label>Store Name:</label>
-            <span>{{ user.storeName }}</span>
+            <span>{{ user.sellerProfile?.storeDetails?.storeName }}</span>
+          </div>
+          <div class="detail-item" *ngIf="user.userRole === 'Seller' && user.sellerProfile?.storeDetails">
+            <label>Store Description:</label>
+            <span>{{ user.sellerProfile?.storeDetails?.storeDescription }}</span>
+          </div>
+          <div class="detail-item" *ngIf="user.userRole === 'Seller' && user.sellerProfile">
+            <label>Average Rating:</label>
+            <span>{{ user.sellerProfile?.averageRating | number:'1.1-1' }} ★</span>
+          </div>
+          <div class="detail-item" *ngIf="user.userRole === 'Seller' && user.sellerProfile">
+            <label>Verified Seller:</label>
+            <span>{{ user.sellerProfile?.isVerifiedSeller ? 'Yes' : 'No' }}</span>
           </div>
         </div>
       </div>
