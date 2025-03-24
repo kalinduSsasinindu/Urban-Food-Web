@@ -50,6 +50,7 @@ export interface StoreDetails {
     storeName?: string;
     storeDescription?: string;
 }
+//dfdfdfdsfdsf
 ///csdagasdm sfdkh bdfkbhj vfhfdkjgbn, 
 export interface SellerProfile {
     storeDetails?: StoreDetails;
