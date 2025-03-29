@@ -17,7 +17,7 @@
   <div class="nav-right">
     <a routerLink="/" class="nav-btn">Home</a>
     <ng-container *ngIf="isLoggedIn; else authButtons">
-      <a routerLink="/seller-profile" class="nav-btn">Profile</a>
+      <button class="nav-btn" (click)="navigateToProfile()">Profile</button>
       <button class="nav-btn" (click)="logout()">Logout</button>
     </ng-container>
     <ng-template #authButtons>

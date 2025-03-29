@@ -8,6 +8,7 @@ import { LoginComponent } from './components/auth/login/login.component';
 import { SignupComponent } from './components/auth/signup/signup.component';
 import { SellerLayoutComponent } from './components/layout/seller-layout/seller-layout.component';
 import { SellerProfileLayoutComponent } from './components/layout/seller-profile-layout/seller-profile-layout.component';
+import { CustomerProfileLayoutComponent } from './components/layout/customer-profile-layout/customer-profile-layout.component';
 
 export const routes: Routes = [
   { 
@@ -54,6 +55,17 @@ export const routes: Routes = [
   {
     path: 'seller-profile',
     component: SellerProfileLayoutComponent,
+    canActivate: [authGuard],
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./components/profile/profile.component').then(m => m.ProfileComponent)
+      }
+    ]
+  },
+  {
+    path: 'customer-profile',
+    component: CustomerProfileLayoutComponent,
     canActivate: [authGuard],
     children: [
       {

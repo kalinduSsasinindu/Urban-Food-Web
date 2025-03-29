@@ -134,8 +134,12 @@ export class AuthService {
         this.clientIdSubject.next(userProfile.clientId);
       }
 
-      // Always redirect to profile page after successful login
-      this.router.navigate(['/profile']);
+      // Redirect to appropriate profile based on user role
+      if (userProfile?.userRole === 'Seller') {
+        this.router.navigate(['/seller-profile']);
+      } else {
+        this.router.navigate(['/customer-profile']);
+      }
     } catch (error) {
       console.error('Error during token exchange:', error);
       this.router.navigate(['/login']);

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: 'app-seller-profile-layout',
+  selector: 'app-customer-profile-layout',
   standalone: true,
   imports: [CommonModule, RouterOutlet],
   template: `
@@ -19,4 +19,4 @@ import { RouterOutlet } from '@angular/router';
     }
   `]
 })
-export class SellerProfileLayoutComponent {} 
+export class CustomerProfileLayoutComponent {} 
