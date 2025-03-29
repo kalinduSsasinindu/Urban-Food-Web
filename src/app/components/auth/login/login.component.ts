@@ -21,6 +21,14 @@ export class LoginComponent {
     this.authService.login();
   }
 
+  loginWithEmail() {
+    this.router.navigate(['/login/email']);
+  }
+
+  loginWithPhone() {
+    this.router.navigate(['/login/phone']);
+  }
+
   navigateToSignup() {
     this.router.navigate(['/signup']);
   }
