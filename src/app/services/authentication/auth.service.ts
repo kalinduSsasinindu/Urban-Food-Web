@@ -134,13 +134,11 @@ export class AuthService {
         this.clientIdSubject.next(userProfile.clientId);
       }
 
-      // Redirect to home or intended page
-      const redirectUrl = this.getRedirectUrl();
-      if (redirectUrl) {
-        this.clearRedirectUrl();
-        this.router.navigate([redirectUrl]);
+      // Redirect to appropriate profile based on user role
+      if (userProfile?.userRole === 'Seller') {
+        this.router.navigate(['/seller-profile']);
       } else {
-        this.router.navigate(['/']);
+        this.router.navigate(['/customer-profile']);
       }
     } catch (error) {
       console.error('Error during token exchange:', error);

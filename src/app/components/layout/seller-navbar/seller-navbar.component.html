@@ -1,0 +1,36 @@
+<nav class="navbar">
+  <div class="nav-left">
+    <a routerLink="/" class="brand-link">UrbanFood</a>
+    <div class="search-container">
+      <input 
+        type="text" 
+        [(ngModel)]="searchQuery" 
+        (keyup.enter)="onSearch()"
+        placeholder="Search for food, restaurants..."
+        class="search-input"
+      >
+      <button class="search-btn" (click)="onSearch()">
+        <i class="fas fa-search">🔍</i>
+      </button>
+    </div>
+  </div>
+  <div class="nav-right">
+    <button class="nav-btn" (click)="logout()">Logout</button>
+  </div>
+</nav>
+
+<nav class="secondary-nav">
+  <div class="nav-container">
+    <div class="nav-items">
+      <a 
+        *ngFor="let item of navItems" 
+        [routerLink]="item.path" 
+        routerLinkActive="active"
+        class="nav-item"
+      >
+        <span class="icon">{{ item.icon }}</span>
+        <span class="label">{{ item.label }}</span>
+      </a>
+    </div>
+  </div>
+</nav> 
