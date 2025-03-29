@@ -11,42 +11,7 @@ import { StoreDetails } from '../../../models/user.model';
   selector: 'app-navbar',
   standalone: true,
   imports: [CommonModule, RouterLink, FormsModule, StoreDetailsModalComponent],
-  template: `
-    <nav class="navbar">
-      <div class="nav-left">
-        <a routerLink="/" class="brand-link">UrbanFood</a>
-        <div class="search-container">
-          <input 
-            type="text" 
-            [(ngModel)]="searchQuery" 
-            (keyup.enter)="onSearch()"
-            placeholder="Search for food, restaurants..."
-            class="search-input"
-          >
-          <button class="search-btn" (click)="onSearch()">
-            <i class="fas fa-search">🔍</i>
-          </button>
-        </div>
-      </div>
-      <div class="nav-right">
-        <button class="nav-btn become-seller-btn" (click)="navigateToBecomeSeller()">Become a Seller</button>
-        <ng-container *ngIf="isLoggedIn; else authButtons">
-          <a routerLink="/profile" class="nav-btn">Profile</a>
-          <button class="nav-btn" (click)="logout()">Logout</button>
-        </ng-container>
-        <ng-template #authButtons>
-          <button class="nav-btn" (click)="login()">Login</button>
-          <button class="nav-btn signup-btn" (click)="signup()">Sign Up</button>
-        </ng-template>
-      </div>
-    </nav>
-
-    <app-store-details-modal 
-      *ngIf="showModal"
-      (closeModal)="closeModal()"
-      (submitStoreDetails)="onSubmitStoreDetails($event)"
-    ></app-store-details-modal>
-  `,
+  templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
@@ -71,7 +36,7 @@ export class NavbarComponent {
   }
 
   login() {
-    this.authService.login();
+    this.router.navigate(['/login']);
   }
 
   logout() {
@@ -79,12 +44,15 @@ export class NavbarComponent {
   }
 
   signup() {
-    // TODO: Implement signup functionality
-    console.log('Sign up clicked');
+    this.router.navigate(['/signup']);
   }
 
-  navigateToBecomeSeller() {
-    this.router.navigate(['/become-seller']);
+  navigateToCart() {
+    if (!this.isLoggedIn) {
+      this.login();
+      return;
+    }
+    this.router.navigate(['/cart']);
   }
 
   showBecomeSellerModal() {
