@@ -1,0 +1,45 @@
+.seller-navbar {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+  padding: 0.5rem 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nav-items {
+  display: flex;
+  gap: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  color: #495057;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.nav-item:hover {
+  background-color: #e9ecef;
+  color: #212529;
+}
+
+.nav-item.active {
+  background-color: #e9ecef;
+  color: #212529;
+  font-weight: 500;
+}
+
+.icon {
+  font-size: 1.2rem;
+}
+
+.label {
+  font-size: 0.9rem;
+} 

@@ -134,14 +134,8 @@ export class AuthService {
         this.clientIdSubject.next(userProfile.clientId);
       }
 
-      // Redirect to home or intended page
-      const redirectUrl = this.getRedirectUrl();
-      if (redirectUrl) {
-        this.clearRedirectUrl();
-        this.router.navigate([redirectUrl]);
-      } else {
-        this.router.navigate(['/']);
-      }
+      // Always redirect to profile page after successful login
+      this.router.navigate(['/profile']);
     } catch (error) {
       console.error('Error during token exchange:', error);
       this.router.navigate(['/login']);

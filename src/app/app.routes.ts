@@ -6,13 +6,10 @@ import { LandingComponent } from './components/landing/landing.component';
 import { CartComponent } from './components/cart/cart.component';
 import { LoginComponent } from './components/auth/login/login.component';
 import { SignupComponent } from './components/auth/signup/signup.component';
+import { SellerLayoutComponent } from './components/layout/seller-layout/seller-layout.component';
+import { SellerProfileLayoutComponent } from './components/layout/seller-profile-layout/seller-profile-layout.component';
 
 export const routes: Routes = [
-  { 
-    path: 'profile', 
-    component: ProfileComponent, 
-    canActivate: [authGuard] 
-  },
   { 
     path: 'become-seller', 
     component: BecomeSellerComponent 
@@ -29,6 +26,41 @@ export const routes: Routes = [
   {
     path: 'signup',
     component: SignupComponent
+  },
+  {
+    path: 'seller',
+    component: SellerLayoutComponent,
+    canActivate: [authGuard],
+    children: [
+      {
+        path: 'products',
+        loadComponent: () => import('./components/seller/products/products.component').then(m => m.ProductsComponent)
+      },
+      {
+        path: 'customers',
+        loadComponent: () => import('./components/seller/customers/customers.component').then(m => m.CustomersComponent)
+      },
+      {
+        path: 'orders',
+        loadComponent: () => import('./components/seller/orders/orders.component').then(m => m.OrdersComponent)
+      },
+      {
+        path: '',
+        redirectTo: 'products',
+        pathMatch: 'full'
+      }
+    ]
+  },
+  {
+    path: 'seller-profile',
+    component: SellerProfileLayoutComponent,
+    canActivate: [authGuard],
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./components/profile/profile.component').then(m => m.ProfileComponent)
+      }
+    ]
   },
   { 
     path: '', 
