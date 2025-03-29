@@ -15,6 +15,12 @@
     </div>
   </div>
   <div class="nav-right">
+    <button class="nav-btn" (click)="logout()">Logout</button>
+  </div>
+</nav>
+
+<nav class="secondary-nav">
+  <div class="nav-container">
     <div class="nav-items">
       <a 
         *ngFor="let item of navItems" 
@@ -25,30 +31,6 @@
         <span class="icon">{{ item.icon }}</span>
         <span class="label">{{ item.label }}</span>
       </a>
-    </div>
-    <div class="profile-dropdown">
-      <button class="nav-btn profile-btn">
-        <span class="profile-icon">👤</span>
-        <span class="profile-name">{{ userProfile?.name || 'Profile' }}</span>
-      </button>
-      <div class="dropdown-content">
-        <div class="profile-header">
-          <span class="profile-icon-large">👤</span>
-          <div class="profile-info">
-            <h4>{{ userProfile?.name }}</h4>
-            <p>{{ userProfile?.email }}</p>
-          </div>
-        </div>
-        <div class="dropdown-divider"></div>
-        <a routerLink="/seller-profile" class="dropdown-item">
-          <span class="icon">⚙️</span>
-          <span>Profile Settings</span>
-        </a>
-        <button class="dropdown-item" (click)="logout()">
-          <span class="icon">🚪</span>
-          <span>Logout</span>
-        </button>
-      </div>
     </div>
   </div>
 </nav> 

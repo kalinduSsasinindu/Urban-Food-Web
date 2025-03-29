@@ -59,7 +59,7 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        loadComponent: () => import('./components/profile/profile.component').then(m => m.ProfileComponent)
+        loadComponent: () => import('./components/seller/profile/seller-profile.component').then(m => m.SellerProfileComponent)
       }
     ]
   },

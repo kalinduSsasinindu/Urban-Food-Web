@@ -3,8 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../services/authentication/auth.service';
-import { UserService } from '../../../services/user.service';
-import { User } from '../../../models/user.model';
 
 @Component({
   selector: 'app-seller-navbar',
@@ -21,20 +19,8 @@ export class SellerNavbarComponent {
   ];
 
   searchQuery: string = '';
-  userProfile: User | null = null;
 
-  constructor(
-    private authService: AuthService,
-    private userService: UserService
-  ) {
-    this.loadUserProfile();
-  }
-
-  loadUserProfile() {
-    this.userService.getProfile().subscribe(user => {
-      this.userProfile = user;
-    });
-  }
+  constructor(private authService: AuthService) {}
 
   onSearch() {
     if (this.searchQuery.trim()) {

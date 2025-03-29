@@ -1,17 +1,83 @@
-.seller-navbar {
-  background-color: #f8f9fa;
+.navbar {
+  background-color: #ffffff;
   border-bottom: 1px solid #dee2e6;
   padding: 0.5rem 1rem;
   position: sticky;
   top: 0;
   z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.brand-link {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-decoration: none;
+  color: #212529;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.search-input {
+  padding: 0.5rem;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  width: 300px;
+}
+
+.search-btn {
+  padding: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-btn {
+  padding: 0.5rem 1rem;
+  background: none;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #495057;
+}
+
+.nav-btn:hover {
+  background-color: #e9ecef;
+  color: #212529;
+}
+
+.secondary-nav {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+  padding: 0.5rem 0;
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
 }
 
 .nav-items {
   display: flex;
   gap: 1rem;
-  max-width: 1200px;
-  margin: 0 auto;
 }
 
 .nav-item {
