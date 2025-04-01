@@ -25,6 +25,8 @@ export class NavbarComponent implements OnInit {
   selectedLanguage: string = 'English';
   currentUser: User | null = null;
   cartItemCount: number = 0;
+  uploadedImageSrc: string | null = null;
+  hasUploadedImage: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -113,14 +115,35 @@ export class NavbarComponent implements OnInit {
       
       reader.onload = () => {
         console.log('Image loaded:', file.name);
-        // For demo purposes, close the modal and update search
-        this.showImageSearchModal = false;
-        this.searchQuery = 'Image search results';
-        this.onSearch();
+        this.uploadedImageSrc = reader.result as string;
+        this.hasUploadedImage = true;
+        
+        // Keep the modal open to show the uploaded image
+        // this.showImageSearchModal = false;
+        // this.searchQuery = 'Image search results';
+        // this.onSearch();
       };
       
       reader.readAsDataURL(file);
     }
+  }
+
+  performImageSearch() {
+    if (this.hasUploadedImage) {
+      this.showImageSearchModal = false;
+      this.searchQuery = 'Image search results';
+      this.onSearch();
+      // Reset the image state for next time
+      setTimeout(() => {
+        this.uploadedImageSrc = null;
+        this.hasUploadedImage = false;
+      }, 500);
+    }
+  }
+
+  cancelImageUpload() {
+    this.uploadedImageSrc = null;
+    this.hasUploadedImage = false;
   }
 
   toggleLanguageDropdown(event: Event) {
@@ -141,6 +164,26 @@ export class NavbarComponent implements OnInit {
   closeLanguageDropdown = () => {
     this.showLanguageDropdown = false;
     document.removeEventListener('click', this.closeLanguageDropdown);
+  }
+  
+  toggleAuthDropdown(event: Event) {
+    event.stopPropagation();
+    this.showAuthDropdown = !this.showAuthDropdown;
+    
+    // Close other dropdowns
+    this.showLanguageDropdown = false;
+    
+    // Add click outside listener
+    if (this.showAuthDropdown) {
+      setTimeout(() => {
+        document.addEventListener('click', this.closeAuthDropdown);
+      }, 0);
+    }
+  }
+  
+  closeAuthDropdown = () => {
+    this.showAuthDropdown = false;
+    document.removeEventListener('click', this.closeAuthDropdown);
   }
   
   selectLanguage(language: string, event: Event) {
