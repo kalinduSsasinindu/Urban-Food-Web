@@ -1,6 +1,12 @@
 <nav class="navbar">
-  <div class="nav-left">
-    <a routerLink="/" class="brand-link">UrbanFood</a>
+  <div class="navbar-container">
+    <!-- Logo -->
+    <a routerLink="/" class="brand-link">
+      <span class="logo-urban">Urban</span><span class="logo-food">Food</span>
+      <i class="fas fa-utensils logo-icon"></i>
+    </a>
+    
+    <!-- Search Bar -->
     <div class="search-container">
       <input 
         type="text" 
@@ -9,24 +15,87 @@
         placeholder="Search for food, restaurants..."
         class="search-input"
       >
+      <div class="image-search-wrapper">
+        <button class="additional-search-btn" (click)="toggleImageSearch($event)">
+          <i class="fas fa-camera"></i>
+        </button>
+        <div class="modal-overlay" *ngIf="showImageSearchModal" (click)="toggleImageSearch($event)"></div>
+        <div class="image-search-modal" *ngIf="showImageSearchModal">
+          <div class="modal-header">
+            <span>Search by image</span>
+            <button class="close-btn" (click)="toggleImageSearch($event)"><i class="fas fa-times"></i></button>
+          </div>
+          <p class="modal-subtitle">Find what you love with better prices on UrbanFood by using an image search</p>
+          <div class="upload-area">
+            <div class="upload-placeholder">
+              <i class="far fa-image"></i>
+              <p>Drag an image here</p>
+              <span>or</span>
+              <button class="upload-btn" (click)="triggerFileInput()">Upload a photo</button>
+              <input type="file" #fileInput style="display: none" accept="image/*" (change)="handleFileUpload($event)">
+            </div>
+          </div>
+          <p class="shortcut-hint">*For a quick search hit CTRL+V to paste an image into the search box</p>
+        </div>
+      </div>
       <button class="search-btn" (click)="onSearch()">
-        <i class="fas fa-search">🔍</i>
+        <i class="fas fa-search"></i>
       </button>
     </div>
-  </div>
-  <div class="nav-right">
-    <a routerLink="/" class="nav-btn">Home</a>
-    <ng-container *ngIf="isLoggedIn; else authButtons">
-      <button class="nav-btn" (click)="navigateToProfile()">Profile</button>
-      <button class="nav-btn" (click)="logout()">Logout</button>
-    </ng-container>
-    <ng-template #authButtons>
-      <button class="nav-btn" (click)="login()">Login</button>
-      <button class="nav-btn signup-btn" (click)="signup()">Sign Up</button>
-    </ng-template>
-    <button class="nav-btn cart-btn" (click)="navigateToCart()">
-      <i class="fas fa-shopping-cart">🛒</i>
-    </button>
+    
+    <!-- Language Selector -->
+    <div class="language-selector" (click)="toggleLanguageDropdown($event)">
+      <!-- Use SVG for both flags -->
+      <div *ngIf="selectedLanguage === 'English'" class="usa-flag-svg"></div>
+      <div *ngIf="selectedLanguage !== 'English'" class="sri-lanka-flag-svg"></div>
+      <span>{{ selectedLanguage }}</span>
+      <i class="fas fa-chevron-down"></i>
+      <div class="language-dropdown" *ngIf="showLanguageDropdown">
+        <div class="dropdown-item" (click)="selectLanguage('English', $event)">
+          <div class="usa-flag-svg"></div>
+          <span>English (USA)</span>
+        </div>
+        <div class="dropdown-item" (click)="selectLanguage('සිංහල', $event)">
+          <div class="sri-lanka-flag-svg"></div>
+          <span>සිංහල (Sri Lanka)</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- User Section -->
+    <div class="user-section">
+      <ng-container *ngIf="isLoggedIn; else authButtons">
+        <div class="user-menu">
+          <i class="fas fa-user"></i>
+          <span>Welcome</span>
+          <button class="account-btn" (click)="navigateToProfile()">
+            My Account <i class="fas fa-chevron-down"></i>
+          </button>
+        </div>
+      </ng-container>
+      <ng-template #authButtons>
+        <div class="user-menu">
+          <i class="fas fa-user"></i>
+          <span>Welcome</span>
+          <button class="account-btn" (click)="showAuthDropdown = !showAuthDropdown">
+            Sign in / Register <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="auth-dropdown" *ngIf="showAuthDropdown">
+            <button class="dropdown-btn login-btn" (click)="login()">Login</button>
+            <button class="dropdown-btn signup-btn" (click)="signup()">Sign Up</button>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+    
+    <!-- Cart -->
+    <div class="cart-container" (click)="navigateToCart()">
+      <div class="cart-icon">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count" *ngIf="cartItemCount > 0">{{cartItemCount}}</span>
+      </div>
+      <span class="cart-text">Cart</span>
+    </div>
   </div>
 </nav>
 

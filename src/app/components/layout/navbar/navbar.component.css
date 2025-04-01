@@ -1,104 +1,510 @@
 .navbar {
   background: white;
-  padding: 1rem 2rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  padding: 0.5rem 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  position: sticky;
+  top: 0;
   z-index: 1000;
+  width: 100%;
 }
 
-.nav-left {
+.navbar-container {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
 }
-
 
 .brand-link {
-  color: #4a4a4a;
   text-decoration: none;
-  font-size: 1.8rem;
-  font-family: 'Pacifico';
-  font-weight: 400;
-  transition: color 0.2s;
-  letter-spacing: 0.5px;
+  font-size: 1.6rem;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 700;
+  margin-right: 1rem;
+  letter-spacing: -0.5px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
 }
 
+.logo-urban {
+  color: #000000;
+  font-weight: bold;
+}
 
+.logo-food {
+  color: #ff4747;
+  font-weight: bold;
+}
 
+.logo-icon {
+  color: #ff4747;
+  font-size: 1rem;
+  margin-left: 0.25rem;
+}
 
 .search-container {
   display: flex;
   align-items: center;
-  background: #f5f5f5;
-  border-radius: 8px;
-  padding: 0.5rem;
-  width: 400px;
+  border: 2px solid #ff4747;
+  border-radius: 20px;
+  overflow: hidden;
+  max-width: 500px;
+  flex: 1;
+  position: relative;
 }
 
 .search-input {
   border: none;
-  background: transparent;
-  padding: 0.5rem;
+  padding: 0.5rem 1rem;
   width: 100%;
   font-size: 0.9rem;
   color: #333;
   outline: none;
 }
 
-.search-btn {
+.search-icon-btn {
+  position: absolute;
+  right: 50px;
   background: none;
   border: none;
   padding: 0.5rem;
   cursor: pointer;
-  color: #666;
-  transition: color 0.2s;
-}
-
-.search-btn:hover {
-  color: #4a4a4a;
-}
-
-.nav-right {
+  color: #888;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  justify-content: center;
 }
 
-.nav-btn {
-  background: none;
+.search-btn {
+  background: #ff4747;
   border: none;
   padding: 0.5rem 1rem;
   cursor: pointer;
-  color: #666;
-  font-size: 0.9rem;
-  transition: all 0.2s;
-  text-decoration: none;
-  border-radius: 4px;
+  color: white;
+  min-width: 40px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top-right-radius: 18px;
+  border-bottom-right-radius: 18px;
 }
 
-.nav-btn:hover {
-  color: #4a4a4a;
+.additional-search-btn {
+  background: white;
+  border: none;
+  border-left: 1px solid #eee;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  color: #999;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  position: relative;
+  z-index: 1;
+}
+
+.additional-search-btn:hover {
+  color: #ff4747;
+}
+
+.additional-search-btn::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  height: 60%;
+  width: 1px;
+  background-color: #eee;
+}
+
+.language-selector {
+  display: flex;
+  align-items: center;
+  margin: 0 15px;
+  cursor: pointer;
+  position: relative;
+}
+
+.language-selector span {
+  margin-right: 5px;
+  font-size: 0.9rem;
+}
+
+.language-selector i {
+  margin-left: 0.25rem;
+  font-size: 0.8rem;
+}
+
+.language-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  min-width: 180px;
+  z-index: 1000;
+  margin-top: 8px;
+  overflow: hidden;
+  border: 1px solid #eee;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  transition: background 0.2s;
+}
+
+.dropdown-item:hover {
   background: #f5f5f5;
 }
 
-.become-seller-btn {
-  border: 2px solid #4a4a4a;
-  color: #4a4a4a;
+.flag-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 16px;
+  margin-right: 5px;
+  vertical-align: middle;
 }
 
-.become-seller-btn:hover {
-  background: #4a4a4a;
-  color: white;
+.flag-icon {
+  font-size: 16px;
+  vertical-align: middle;
+}
+
+/* USA flag styling */
+.fas.fa-flag-usa {
+  color: #3c3b6e; /* Navy blue for US flag */
+  font-size: 16px;
+  transform: scale(1.1);
+}
+
+/* Sri Lanka flag styling */
+.fas.fa-flag.sri-lanka-flag {
+  color: #8D153A; /* Maroon for Sri Lanka flag */
+  font-size: 16px;
+  transform: scale(1.1);
+}
+
+.user-section {
+  margin: 0 1rem;
+  position: relative;
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  color: #333;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.user-menu i {
+  margin-right: 0.25rem;
+  color: #666;
+}
+
+.account-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #333;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  margin-left: 0.25rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.account-btn i {
+  margin-left: 0.25rem;
+  font-size: 0.7rem;
+}
+
+.auth-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  border-radius: 4px;
+  margin-top: 0.5rem;
+  width: 120px;
+  z-index: 1001;
+}
+
+.dropdown-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #333;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+.dropdown-btn:hover {
+  background: #f5f5f5;
+}
+
+.login-btn {
+  border-bottom: 1px solid #eee;
 }
 
 .signup-btn {
-  background: #4a4a4a;
-  color: white;
+  color: #ff4747;
 }
 
-.signup-btn:hover {
-  background: #666;
+.cart-container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: #333;
+  font-size: 0.9rem;
+  position: relative;
+}
+
+.cart-icon {
+  position: relative;
+  margin-right: 0.25rem;
+}
+
+.cart-icon i {
+  font-size: 1.4rem;
+  color: #333;
+}
+
+.cart-count {
+  position: absolute;
+  top: -5px;
+  right: -8px;
+  background: #ff4747;
   color: white;
+  border-radius: 50%;
+  font-size: 0.7rem;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cart-text {
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-left: 0.25rem;
+}
+
+@media (max-width: 992px) {
+  .language-selector span {
+    display: none;
+  }
+  
+  .search-container {
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar-container {
+    padding: 0 0.5rem;
+  }
+  
+  .language-selector {
+    display: none;
+  }
+  
+  .search-container {
+    max-width: 200px;
+  }
+  
+  .brand-link {
+    font-size: 1.5rem;
+  }
+}
+
+.image-search-wrapper {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.image-search-modal {
+  position: fixed;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 380px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  z-index: 1500;
+  padding: 16px;
+  border: 1px solid #eaeaea;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.modal-header span {
+  font-weight: 600;
+  font-size: 16px;
+  color: #222;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #999;
+  font-size: 14px;
+  padding: 4px;
+}
+
+.close-btn:hover {
+  color: #666;
+}
+
+.modal-subtitle {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+
+.upload-area {
+  border: 1px dashed #ccc;
+  background: #f7f7f7;
+  border-radius: 4px;
+  padding: 28px;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.upload-placeholder i {
+  font-size: 40px;
+  color: #ddd;
+  margin-bottom: 12px;
+}
+
+.upload-placeholder p {
+  margin: 6px 0;
+  font-size: 15px;
+  color: #666;
+  font-weight: 500;
+}
+
+.upload-placeholder span {
+  margin: 6px 0;
+  font-size: 14px;
+  color: #999;
+}
+
+.upload-btn {
+  background: #e22;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 12px;
+  box-shadow: 0 2px 4px rgba(226, 34, 34, 0.2);
+}
+
+.upload-btn:hover {
+  background: #d11;
+}
+
+.shortcut-hint {
+  font-size: 12px;
+  color: #999;
+  margin-top: 8px;
+  font-style: italic;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 1400;
+}
+
+:host-context(body.modal-open) {
+  overflow: hidden;
+}
+
+.selected-flag {
+  width: 22px;
+  height: 16px;
+  margin-right: 5px;
+  object-fit: cover;
+  border-radius: 2px;
+  vertical-align: middle;
+  display: inline-block;
+}
+
+/* USA flag SVG representation */
+.usa-flag-svg {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1235 650'%3E%3Crect width='1235' height='650' fill='%23fff'/%3E%3Cpath d='M0,0 h1235 v50 H0 z' fill='%23B22234'/%3E%3Cpath d='M0,100 h1235 v50 H0 z' fill='%23B22234'/%3E%3Cpath d='M0,200 h1235 v50 H0 z' fill='%23B22234'/%3E%3Cpath d='M0,300 h1235 v50 H0 z' fill='%23B22234'/%3E%3Cpath d='M0,400 h1235 v50 H0 z' fill='%23B22234'/%3E%3Cpath d='M0,500 h1235 v50 H0 z' fill='%23B22234'/%3E%3Cpath d='M0,600 h1235 v50 H0 z' fill='%23B22234'/%3E%3Crect width='494' height='350' fill='%233C3B6E'/%3E%3Cg fill='%23fff'%3E%3Cpath d='M41.2,46.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L41.2,46.9z'/%3E%3Cpath d='M99.2,46.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L99.2,46.9z'/%3E%3Cpath d='M156.2,46.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L156.2,46.9z'/%3E%3Cpath d='M213.2,46.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L213.2,46.9z'/%3E%3Cpath d='M270.2,46.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L270.2,46.9z'/%3E%3Cpath d='M327.2,46.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L327.2,46.9z'/%3E%3Cpath d='M384.2,46.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L384.2,46.9z'/%3E%3Cpath d='M41.2,92.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L41.2,92.9z'/%3E%3Cpath d='M99.2,92.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L99.2,92.9z'/%3E%3Cpath d='M156.2,92.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L156.2,92.9z'/%3E%3Cpath d='M213.2,92.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L213.2,92.9z'/%3E%3Cpath d='M270.2,92.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L270.2,92.9z'/%3E%3Cpath d='M327.2,92.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L327.2,92.9z'/%3E%3Cpath d='M41.2,138.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L41.2,138.9z'/%3E%3Cpath d='M99.2,138.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L99.2,138.9z'/%3E%3Cpath d='M156.2,138.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L156.2,138.9z'/%3E%3Cpath d='M213.2,138.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L213.2,138.9z'/%3E%3Cpath d='M270.2,138.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L270.2,138.9z'/%3E%3Cpath d='M327.2,138.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L327.2,138.9z'/%3E%3Cpath d='M41.2,184.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L41.2,184.9z'/%3E%3Cpath d='M99.2,184.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L99.2,184.9z'/%3E%3Cpath d='M156.2,184.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L156.2,184.9z'/%3E%3Cpath d='M213.2,184.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L213.2,184.9z'/%3E%3Cpath d='M270.2,184.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L270.2,184.9z'/%3E%3Cpath d='M327.2,184.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L327.2,184.9z'/%3E%3Cpath d='M41.2,230.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L41.2,230.9z'/%3E%3Cpath d='M99.2,230.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L99.2,230.9z'/%3E%3Cpath d='M156.2,230.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L156.2,230.9z'/%3E%3Cpath d='M213.2,230.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L213.2,230.9z'/%3E%3Cpath d='M270.2,230.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L270.2,230.9z'/%3E%3Cpath d='M327.2,230.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L327.2,230.9z'/%3E%3Cpath d='M384.2,230.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L384.2,230.9z'/%3E%3Cpath d='M41.2,276.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L41.2,276.9z'/%3E%3Cpath d='M99.2,276.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L99.2,276.9z'/%3E%3Cpath d='M156.2,276.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L156.2,276.9z'/%3E%3Cpath d='M213.2,276.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L213.2,276.9z'/%3E%3Cpath d='M270.2,276.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L270.2,276.9z'/%3E%3Cpath d='M327.2,276.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L327.2,276.9z'/%3E%3Cpath d='M384.2,276.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L384.2,276.9z'/%3E%3Cpath d='M41.2,322.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L41.2,322.9z'/%3E%3Cpath d='M99.2,322.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L99.2,322.9z'/%3E%3Cpath d='M156.2,322.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L156.2,322.9z'/%3E%3Cpath d='M213.2,322.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L213.2,322.9z'/%3E%3Cpath d='M270.2,322.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L270.2,322.9z'/%3E%3Cpath d='M327.2,322.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L327.2,322.9z'/%3E%3Cpath d='M384.2,322.9l11.5,7.9l-4.4-13.3l11.4-8.3l-14.1-0.1l-4.4-13.3l-4.4,13.3l-14.1,0.1l11.4,8.3l-4.4,13.3L384.2,322.9z'/%3E%3C/g%3E%3C/svg%3E");
+  width: 22px;
+  height: 16px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 5px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 2px;
+}
+
+/* Sri Lanka flag SVG representation */
+.sri-lanka-flag-svg {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 600'%3E%3Cpath fill='%23FFBF00' d='M0 0h1200v600H0z'/%3E%3Cpath fill='%23006747' d='M0 0h300v600H0z'/%3E%3Cpath fill='%23FF8F1C' d='M300 0h300v600H300z'/%3E%3Cpath fill='%238D153A' d='M600 0h600v600H600z'/%3E%3Cpath fill='%23FFBF00' d='M800 175c0 0-15-25-40-25s-40 15-40 35 10 45 25 55 35 15 45 0 20-25 20-40-5-25-10-25zm40-55c0 0-5-15-20-15s-25 5-25 20 0 20 15 25 25-5 30-15 0-15 0-15zm35 15c0 0-15-10-25 0s-10 20 0 30 20 5 25-5 5-15 0-25zm-145-15c0 0-15-5-20 5s-5 20 5 25 15 0 20-10 0-20-5-20zm-45 35c0 0-15 5-15 20s10 20 20 20 10-5 10-20-5-20-15-20z'/%3E%3Cpath fill='%23FFBF00' d='M720 230c0 0 0 15 10 25s20 10 30 0 10-20 0-30-15-10-25-5-15 5-15 10zm190-40c0 0-10-10-20 0s-5 20 5 25 15 0 20-10-5-15-5-15z'/%3E%3Cpath fill='%23FFBF00' d='M805 240c0 0-10 20-5 40s20 30 35 30 35-20 30-50-25-40-40-30-20 10-20 10z'/%3E%3Cg fill='%23FFBF00'%3E%3Cpath d='M840 111l15 15M840 489l15-15M1060 111l-15 15M1060 489l-15-15'/%3E%3C/g%3E%3C/svg%3E");
+  width: 22px;
+  height: 16px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 5px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 2px;
 }
