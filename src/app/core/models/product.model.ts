@@ -1,14 +1,17 @@
 export interface Product {
-  id?: string;
+  id: string;
   title: string;
   description: string;
   images?: string[];
   imgUrls?: string[];
-  variants?: ProductVariant[];
-  options?: VariantOption[];
+  variants: ProductVariant[];
+  options: VariantOption[];
   tags?: string[];
-  createdAt?: Date;
-  updatedAt?: Date;
+}
+
+export interface VariantOption {
+  name: string;
+  values: string[];
 }
 
 export interface ProductVariant {
@@ -22,26 +25,19 @@ export interface ProductVariant {
   onHandQuantity?: number;
 }
 
-export interface VariantOption {
-  name: string;
-  values: string[];
-}
-
 export interface ProductSearchResponse {
-  id?: string;
+  id: string;
   title: string;
   description: string;
-  imgUrls?: string[];
-  tags?: string[];
+  price: number;
+  imgUrl: string;
+  tags: string[];
 }
 
 export interface MediaServiceDto {
-  productId: string;
-  newMediaBase64: string[];
-  mediaUpdates: MediaUpdate[];
-}
-
-export interface MediaUpdate {
+  id: string;
   url: string;
-  isDeleted: boolean;
+  fileName: string;
+  fileType: string;
+  size: number;
 } 

@@ -252,8 +252,8 @@ export class ProductsComponent implements OnInit {
   }
   
   getProductImageUrl(product: ProductSearchResponse): string {
-    return product.imgUrls && product.imgUrls.length > 0 
-      ? product.imgUrls[0] 
+    return product.imgUrl && product.imgUrl.length > 0 
+      ? product.imgUrl[0] 
       : 'assets/placeholder-image.jpg';
   }
   
@@ -264,8 +264,7 @@ export class ProductsComponent implements OnInit {
   onEditProduct(productId?: string) {
     if (!productId) return;
     console.log('Edit product clicked:', productId);
-    // This would typically navigate to a product edit page
-    // this.router.navigate(['/seller/products/edit', productId]);
+    this.router.navigate(['/seller/products/edit', productId]);
   }
   
   onDeleteProduct(productId?: string) {

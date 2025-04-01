@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, catchError, map, throwError } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable, catchError, map, throwError, of } from 'rxjs';
 import { 
   Product, 
   ProductSearchResponse, 
@@ -9,14 +10,16 @@ import {
 } from '../models/product.model';
 import { ApiService } from './api.service';
 import { environment } from '../../utils/config';
+import { Tag } from '../models/tag.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
   private apiUrl = `${environment.baseAPIUrl}Product`;
+  private tagsUrl = `${environment.baseAPIUrl}Tags`;
 
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService, private http: HttpClient) {}
 
   // Get all products
   getProducts(): Observable<ProductSearchResponse[]> {
@@ -50,6 +53,11 @@ export class ProductService {
     );
   }
 
+  // Add a new product - alternative name for createProduct
+  addProduct(product: Product): Observable<string> {
+    return this.createProduct(product);
+  }
+
   // Update product options
   updateProductOptions(id: string, options: VariantOption[]): Observable<ProductVariant[]> {
     return this.apiService.patch<ProductVariant[]>(`${this.apiUrl}/${id}/Options`, options);
@@ -68,7 +76,43 @@ export class ProductService {
 
   // Generate product variants
   generateVariants(options: VariantOption[]): Observable<ProductVariant[]> {
-    return this.apiService.post<ProductVariant[]>(`${this.apiUrl}/GenerateVariants`, options);
+    if (!options || options.length === 0) {
+      return of([]);
+    }
+
+    // Generate all possible combinations of option values
+    const generateCombinations = (options: any[], currentIndex: number, currentCombination: any[], combinations: any[]) => {
+      if (currentIndex === options.length) {
+        combinations.push([...currentCombination]);
+        return;
+      }
+
+      const currentOption = options[currentIndex];
+      for (const value of currentOption.values) {
+        currentCombination.push({ option: currentOption.name, value });
+        generateCombinations(options, currentIndex + 1, currentCombination, combinations);
+        currentCombination.pop();
+      }
+    };
+
+    const combinations: any[] = [];
+    generateCombinations(options, 0, [], combinations);
+
+    // Create variants from the combinations
+    const variants: ProductVariant[] = combinations.map((combination, index) => {
+      const name = combination.map((c: any) => c.value).join(' / ');
+      return {
+        name,
+        price: 0,
+        variantId: index,
+        sku: `GEN-SKU-${index}`,
+        isActive: true,
+        availableQuantity: 0,
+        committedQuantity: 0
+      };
+    });
+
+    return of(variants);
   }
 
   // Update product title and description
@@ -116,8 +160,17 @@ export class ProductService {
     );
   }
 
-  // Add tags to a product
-  addTagToProduct(productId: string, tagNames: string[]): Observable<any> {
-    return this.apiService.post(`${this.apiUrl}/${productId}/add-tag`, tagNames);
+  // Tag related methods
+  searchTags(kind: string): Observable<Tag[]> {
+    return this.apiService.get<Tag[]>(`${this.tagsUrl}/kind/${kind}`).pipe(
+      catchError((error: any) => {
+        console.error('Error fetching tags:', error);
+        return of([]);
+      })
+    );
+  }
+
+  addTagToProduct(productId: string, tags: string[]): Observable<any> {
+    return this.apiService.put(`${this.apiUrl}/${productId}/tags`, { tags });
   }
 } 

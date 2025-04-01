@@ -3,11 +3,18 @@ import { RouterOutlet, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from './core/auth/auth.service';
 import { NavbarComponent } from './layout/navbar/navbar.component';
+import { NotificationContainerComponent } from './shared/components/notifications/notification-container/notification-container.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, CommonModule, NavbarComponent],
+  imports: [
+    RouterOutlet, 
+    RouterLink, 
+    CommonModule, 
+    NavbarComponent,
+    NotificationContainerComponent
+  ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
