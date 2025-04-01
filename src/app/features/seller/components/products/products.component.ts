@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../../../core/services/product.service';
 import { ProductSearchResponse } from '../../../../core/models/product.model';
@@ -219,7 +219,10 @@ export class ProductsComponent implements OnInit {
   products: ProductSearchResponse[] = [];
   searchQuery: string = '';
   
-  constructor(private productService: ProductService) {}
+  constructor(
+    private productService: ProductService,
+    private router: Router
+  ) {}
   
   ngOnInit() {
     this.loadProducts();
@@ -255,10 +258,7 @@ export class ProductsComponent implements OnInit {
   }
   
   onAddProduct() {
-    // Navigate to product creation form
-    console.log('Add product clicked');
-    // This would typically navigate to a product creation page
-    // this.router.navigate(['/seller/products/add']);
+    this.router.navigate(['/seller/products/add']);
   }
   
   onEditProduct(productId?: string) {

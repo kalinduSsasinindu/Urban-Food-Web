@@ -1,0 +1,149 @@
+<div class="product-page">
+  <div class="product-header">
+    <div class="left-section">
+      <button mat-icon-button aria-label="Go back" (click)="goBack()">
+        <mat-icon>keyboard_backspace</mat-icon>
+      </button>
+      <h2 class="product-title">Add Product</h2>
+    </div>
+    <div class="right-section">
+      <!-- Future actions can be added here -->
+    </div>
+  </div>
+
+  <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+    <div class="card">
+      <div class="form-container-wrapper">
+        <div class="form-container">
+          <div class="form-field">
+            <label class="form-label">Title:</label>
+            <input 
+              matInput 
+              formControlName="title" 
+              required 
+              placeholder="Enter product title"
+              class="form-input custom-input"
+            >
+            <div *ngIf="productForm.get('title')?.invalid && productForm.get('title')?.touched" class="error-message">
+              Title is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="content" class="form-label">Content:</label>
+            <div class="rich-text-editor">
+              <!-- Rich text editor placeholder -->
+              <textarea formControlName="content" class="content-editor" placeholder="Enter product description"></textarea>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label class="form-label">Media:</label>
+            <div class="media-upload-section">
+              <div class="dropzone" (click)="triggerFileInput()">
+                <p>Upload new</p>
+                <button type="button" mat-stroked-button>Select existing</button>
+                <input 
+                  type="file" 
+                  id="file-input" 
+                  accept="image/*, video/*" 
+                  hidden 
+                  multiple 
+                  (change)="onFileSelected($event)"
+                >
+                <p>Accepts images, videos, or 3D models</p>
+              </div>
+              
+              <div class="selected-files" *ngIf="selectedFiles.length > 0">
+                <div class="file-preview" *ngFor="let file of selectedFiles; let i = index">
+                  <div class="file-info">
+                    <span>{{file.name}}</span>
+                    <button type="button" (click)="removeFile(i)" class="remove-file">×</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card varient-card">
+      <h3 class="card-header">Variants</h3>
+      <div class="form-container-wrapper">
+        <div class="form-container">
+          <div formArrayName="options">
+            <div class="add-options-placeholder" *ngIf="optionsArray.length === 0">
+              <button type="button" mat-stroked-button (click)="addOption()">
+                <mat-icon>add_circle</mat-icon> Add options like size or color
+              </button>
+            </div>
+
+            <div *ngFor="let option of optionsArray.controls; let i = index" class="option-container">
+              <div [formGroupName]="i" class="option-group">
+                <div class="option-header">
+                  <div class="option-name-field">
+                    <label class="form-label">Option Name:</label>
+                    <input 
+                      formControlName="name" 
+                      class="form-input" 
+                      placeholder="e.g., Size, Color, Material"
+                    >
+                  </div>
+                  <button type="button" class="remove-option" (click)="removeOption(i)">×</button>
+                </div>
+
+                <div formArrayName="values" class="option-values">
+                  <div *ngFor="let value of option.get('values')?.controls; let j = index" 
+                       [formGroupName]="j" class="option-value-row">
+                    <input 
+                      formControlName="value" 
+                      class="form-input value-input" 
+                      placeholder="Option value (e.g., Small, Red, etc.)"
+                    >
+                    <input 
+                      type="number" 
+                      formControlName="price" 
+                      class="form-input price-input" 
+                      placeholder="Price adjustment"
+                    >
+                    <button 
+                      type="button" 
+                      class="remove-value" 
+                      (click)="removeOptionValue(i, j)" 
+                      *ngIf="option.get('values')?.controls.length > 1"
+                    >×</button>
+                  </div>
+                  <button 
+                    type="button" 
+                    class="add-value-btn" 
+                    (click)="addOptionValue(i)"
+                  >+ Add another value</button>
+                </div>
+              </div>
+            </div>
+            
+            <button 
+              type="button" 
+              mat-stroked-button 
+              class="add-another-option" 
+              (click)="addOption()" 
+              *ngIf="optionsArray.length > 0"
+            >
+              <mat-icon>add_circle</mat-icon> Add another option
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button mat-stroked-button type="button" (click)="goBack()">Cancel</button>
+      <button mat-stroked-button color="primary" type="submit" [disabled]="productForm.invalid">Add Product</button>
+    </div>
+  </form>
+
+  <div class="loading-spinner" *ngIf="isLoading">
+    <div class="spinner"></div>
+  </div>
+</div> 
