@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
-import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators, FormsModule, AbstractControl } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators, FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { ProductService } from '../../../../../core/services/product.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-add-product',
@@ -17,7 +18,8 @@ import { ProductService } from '../../../../../core/services/product.service';
     FormsModule,
     MatButtonModule,
     MatIconModule,
-    MatInputModule
+    MatInputModule,
+    MatFormFieldModule
   ],
   templateUrl: './add-product.component.html',
   styleUrls: ['./add-product.component.css']
@@ -47,6 +49,10 @@ export class AddProductComponent implements OnInit {
 
   get optionsArray(): FormArray {
     return this.productForm.get('options') as FormArray;
+  }
+
+  getOptionValuesArray(index: number): FormArray {
+    return (this.optionsArray.at(index).get('values') as FormArray);
   }
 
   addOption(): void {

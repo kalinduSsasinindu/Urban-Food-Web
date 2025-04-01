@@ -79,49 +79,52 @@
               </button>
             </div>
 
-            <div *ngFor="let option of optionsArray.controls; let i = index" class="option-container">
-              <div [formGroupName]="i" class="option-group">
-                <div class="option-header">
-                  <div class="option-name-field">
-                    <label class="form-label">Option Name:</label>
-                    <input 
-                      formControlName="name" 
-                      class="form-input" 
-                      placeholder="e.g., Size, Color, Material"
-                    >
+            <ng-container *ngFor="let optionControl of optionsArray.controls; let i = index">
+              <div class="option-container">
+                <div [formGroupName]="i" class="option-group">
+                  <div class="option-header">
+                    <div class="option-name-field">
+                      <label class="form-label">Option Name:</label>
+                      <input 
+                        formControlName="name" 
+                        class="form-input" 
+                        placeholder="e.g., Size, Color, Material"
+                      >
+                    </div>
+                    <button type="button" class="remove-option" (click)="removeOption(i)">×</button>
                   </div>
-                  <button type="button" class="remove-option" (click)="removeOption(i)">×</button>
-                </div>
 
-                <div formArrayName="values" class="option-values">
-                  <div *ngFor="let value of option.get('values')?.controls; let j = index" 
-                       [formGroupName]="j" class="option-value-row">
-                    <input 
-                      formControlName="value" 
-                      class="form-input value-input" 
-                      placeholder="Option value (e.g., Small, Red, etc.)"
-                    >
-                    <input 
-                      type="number" 
-                      formControlName="price" 
-                      class="form-input price-input" 
-                      placeholder="Price adjustment"
-                    >
+                  <div formArrayName="values" class="option-values">
+                    <ng-container *ngFor="let valueControl of getOptionValuesArray(i).controls; let j = index">
+                      <div [formGroupName]="j" class="option-value-row">
+                        <input 
+                          formControlName="value" 
+                          class="form-input value-input" 
+                          placeholder="Option value (e.g., Small, Red, etc.)"
+                        >
+                        <input 
+                          type="number" 
+                          formControlName="price" 
+                          class="form-input price-input" 
+                          placeholder="Price adjustment"
+                        >
+                        <button 
+                          type="button" 
+                          class="remove-value" 
+                          (click)="removeOptionValue(i, j)" 
+                          *ngIf="getOptionValuesArray(i).length > 1"
+                        >×</button>
+                      </div>
+                    </ng-container>
                     <button 
                       type="button" 
-                      class="remove-value" 
-                      (click)="removeOptionValue(i, j)" 
-                      *ngIf="option.get('values')?.controls.length > 1"
-                    >×</button>
+                      class="add-value-btn" 
+                      (click)="addOptionValue(i)"
+                    >+ Add another value</button>
                   </div>
-                  <button 
-                    type="button" 
-                    class="add-value-btn" 
-                    (click)="addOptionValue(i)"
-                  >+ Add another value</button>
                 </div>
               </div>
-            </div>
+            </ng-container>
             
             <button 
               type="button" 
