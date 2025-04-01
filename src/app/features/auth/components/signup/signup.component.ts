@@ -3,22 +3,13 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AuthService } from '../../../../core/auth/auth.service';
-import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-signup',
   standalone: true,
   imports: [CommonModule, RouterLink, FormsModule, ReactiveFormsModule],
   templateUrl: './signup.component.html',
-  styleUrls: ['./signup.component.css'],
-  animations: [
-    trigger('slideDown', [
-      transition(':enter', [
-        style({ opacity: 0, transform: 'translateY(-10px)' }),
-        animate('300ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
-      ])
-    ])
-  ]
+  styleUrls: ['./signup.component.css']
 })
 export class SignupComponent implements OnInit {
   signupForm!: FormGroup;
