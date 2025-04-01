@@ -1,0 +1,200 @@
+<div class="container">
+  <div class="header">
+    <h1>{{ isEditMode ? 'Edit Product' : 'Add New Product' }}</h1>
+    <div class="actions">
+      <button class="secondary-btn" (click)="goBack()">
+        Back
+      </button>
+      <button *ngIf="isEditMode" class="action-btn" (click)="openDuplicateDialog()">
+        Duplicate
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="loader"></div>
+    <p>Loading...</p>
+  </div>
+
+  <form *ngIf="!isLoading" [formGroup]="productForm" (ngSubmit)="onSubmit($event)">
+    <!-- Basic Info Card -->
+    <div class="card basic-info">
+      <h2>Basic Information</h2>
+      <div class="form-field">
+        <label for="title">Product Title*</label>
+        <input 
+          id="title" 
+          type="text" 
+          formControlName="title" 
+          placeholder="Enter product title"
+          [class.error]="productForm.get('title')?.invalid && productForm.get('title')?.touched">
+        <div *ngIf="productForm.get('title')?.invalid && productForm.get('title')?.touched" class="error-text">
+          Product title is required
+        </div>
+      </div>
+      
+      <div class="form-field">
+        <label for="description">Description</label>
+        <textarea 
+          id="description" 
+          formControlName="description" 
+          rows="5" 
+          placeholder="Add a detailed description of your product"></textarea>
+      </div>
+    </div>
+
+    <!-- Media Card -->
+    <div class="card">
+      <h2>Media</h2>
+      <div class="drop-area" 
+           (dragover)="onDragOver($event)" 
+           (drop)="onDrop($event)" 
+           *ngIf="showUploadSection()">
+        <div class="upload-content">
+          <div class="upload-icon">
+            <span class="icon">📁</span>
+          </div>
+          <p>Drag & drop images here or click to browse</p>
+          <button class="upload-btn" (click)="triggerFileInput($event)">Browse Files</button>
+          <input #fileInput type="file" accept="image/*" multiple (change)="onFileSelected($event)" style="display: none;">
+        </div>
+      </div>
+
+      <div class="media-preview" *ngIf="hasImages()">
+        <div class="preview-header">
+          <div class="preview-actions">
+            <label class="checkbox-container">
+              <input #selectAllCheckbox type="checkbox" [checked]="allImagesSelected" (change)="toggleSelectAll(selectAllCheckbox.checked)">
+              <span class="checkmark"></span>
+              Select All
+            </label>
+            <button class="remove-btn" [disabled]="!hasSelectedImages()" (click)="removeSelectedImages()" 
+                    [class.disabled]="!hasSelectedImages()">
+              Remove Selected
+            </button>
+            <button class="add-more-btn" (click)="triggerFileInput($event)">
+              Add More
+            </button>
+          </div>
+        </div>
+        
+        <div class="image-grid">
+          <div class="image-item" *ngFor="let img of imagePreview; let i = index">
+            <div class="image-container" [class.selected]="img.selected">
+              <img [src]="img.url" alt="Product image">
+              <div class="image-overlay" (click)="toggleImageSelection(i)">
+                <div class="checkbox">
+                  <input type="checkbox" [checked]="img.selected">
+                  <span class="checkmark"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Options Card -->
+    <div class="card">
+      <h2>Options</h2>
+      <p class="subtitle">Add options like color or size that customers can choose from</p>
+      
+      <!-- Options Array -->
+      <div formArrayName="options">
+        <div *ngFor="let option of optionsFormArray.controls; let i = index" class="option-container" [formGroupName]="i">
+          <div class="option-header">
+            <div class="form-field">
+              <label [for]="'option' + i">Option Name</label>
+              <input [id]="'option' + i" type="text" formControlName="name" placeholder="e.g. Size, Color">
+            </div>
+            <button class="remove-btn" (click)="removeOption($event, i)">Remove</button>
+          </div>
+
+          <!-- Option Values -->
+          <div class="option-values" formArrayName="values">
+            <div *ngFor="let value of getOptionValuesFormArray(i).controls; let j = index" class="value-item">
+              <input [formControlName]="j" placeholder="Enter option value">
+              <button class="remove-value-btn" (click)="removeOptionValue($event, i, j)">×</button>
+            </div>
+            <button class="add-value-btn" (click)="addOptionValue($event, i)">+ Add Option Value</button>
+          </div>
+        </div>
+      </div>
+      
+      <button class="add-option-btn" (click)="addOption($event)" *ngIf="optionsFormArray.length < 3">
+        + Add another option
+      </button>
+    </div>
+
+    <!-- Variants Card -->
+    <div class="card" *ngIf="generatedVariants.length > 0">
+      <h2>Variants</h2>
+      <p class="subtitle">Set price and inventory for each variant</p>
+      
+      <div class="variants-table">
+        <div class="variants-header">
+          <div class="variant-col">Variant</div>
+          <div class="price-col">Price</div>
+          <div class="quantity-col">Available Quantity</div>
+        </div>
+        
+        <div class="variants-body">
+          <div class="variant-row" *ngFor="let variant of generatedVariants">
+            <div class="variant-col">{{ variant.name }}</div>
+            <div class="price-col">
+              <div class="price-input">
+                <span class="currency-symbol">$</span>
+                <input type="number" min="0" step="0.01" 
+                      [value]="variant.price" 
+                      (input)="updateVariantPrice(variant, $event)">
+              </div>
+            </div>
+            <div class="quantity-col">
+              <input type="number" min="0" step="1" 
+                    [value]="variant.availableQuantity" 
+                    (input)="updateVariantQuantity(variant, $event)">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tags Card -->
+    <div class="card" *ngIf="isEditMode">
+      <h2>Tags</h2>
+      <p class="subtitle">Add tags to help customers find your product</p>
+      
+      <div class="tags-container" [class.disabled]="isTagCardDisabled">
+        <div class="tags-input-area">
+          <div class="tag-chips">
+            <div class="tag-chip" *ngFor="let tag of tags">
+              <span class="tag-text">{{ tag }}</span>
+              <button class="tag-remove" (click)="removeTag(tag)" type="button">×</button>
+            </div>
+          </div>
+          
+          <div class="tag-input-container">
+            <input type="text" 
+                  [(ngModel)]="tagInputValue" 
+                  [ngModelOptions]="{standalone: true}"
+                  placeholder="Add a tag..." 
+                  (keydown.enter)="addTag(); $event.preventDefault()">
+            <button class="add-tag-btn" (click)="addTag()" type="button">Add</button>
+          </div>
+        </div>
+        
+        <div class="tag-actions" *ngIf="isTagDataDirty">
+          <button class="cancel-btn" (click)="onCancelTagChanges()" type="button">Cancel</button>
+          <button class="save-btn" (click)="onSaveTagChanges()" type="button">Save Tags</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="form-actions">
+      <button type="submit" class="primary-btn" [disabled]="productForm.invalid || isSubmitting">
+        {{ isEditMode ? 'Update Product' : 'Add Product' }}
+      </button>
+    </div>
+  </form>
+</div> 
