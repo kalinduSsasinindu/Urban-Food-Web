@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { AuthService } from './services/authentication/auth.service';
-import { NavbarComponent } from './components/layout/navbar/navbar.component';
+import { AuthService } from './core/auth/auth.service';
+import { NavbarComponent } from './layout/navbar/navbar.component';
 
 @Component({
   selector: 'app-root',
