@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { AuthService } from '../../../services/authentication/auth.service';
@@ -15,9 +15,15 @@ import { StoreDetails, User } from '../../../models/user.model';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
+  @ViewChild('fileInput') fileInput!: ElementRef;
   searchQuery: string = '';
   showModal: boolean = false;
+  showAuthDropdown: boolean = false;
+  showImageSearchModal: boolean = false;
+  showLanguageDropdown: boolean = false;
+  selectedLanguage: string = 'English';
   currentUser: User | null = null;
+  cartItemCount: number = 0;
 
   constructor(
     private authService: AuthService,
@@ -28,6 +34,7 @@ export class NavbarComponent implements OnInit {
   ngOnInit() {
     if (this.isLoggedIn) {
       this.loadUserProfile();
+      this.loadCartItemCount();
     }
   }
 
@@ -44,6 +51,12 @@ export class NavbarComponent implements OnInit {
     });
   }
 
+  private loadCartItemCount() {
+    // TODO: Implement loading cart item count from service
+    // For now, we'll use a dummy value
+    this.cartItemCount = 3;
+  }
+
   get isLoggedIn(): boolean {
     return !!sessionStorage.getItem('access_token');
   }
@@ -55,16 +68,105 @@ export class NavbarComponent implements OnInit {
     }
   }
 
+  onImageSearch() {
+    // TODO: Implement image search functionality
+    console.log('Image search clicked');
+  }
+
+  toggleImageSearch(event?: Event) {
+    if (event) {
+      event.stopPropagation(); // Prevent event bubbling
+      event.preventDefault();
+    }
+    
+    // Toggle modal state
+    this.showImageSearchModal = !this.showImageSearchModal;
+    
+    // If opening modal, add class to prevent body scrolling
+    if (this.showImageSearchModal) {
+      document.body.classList.add('modal-open');
+    } else {
+      document.body.classList.remove('modal-open');
+    }
+    
+    console.log('Image search modal toggled:', this.showImageSearchModal);
+  }
+
+  triggerFileInput() {
+    this.fileInput.nativeElement.click();
+  }
+
+  handleFileUpload(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      
+      // Check if the file is an image
+      if (!file.type.startsWith('image/')) {
+        alert('Please select an image file');
+        return;
+      }
+      
+      // Create a reader to read the file
+      const reader = new FileReader();
+      
+      reader.onload = () => {
+        console.log('Image loaded:', file.name);
+        // For demo purposes, close the modal and update search
+        this.showImageSearchModal = false;
+        this.searchQuery = 'Image search results';
+        this.onSearch();
+      };
+      
+      reader.readAsDataURL(file);
+    }
+  }
+
+  toggleLanguageDropdown(event: Event) {
+    event.stopPropagation();
+    this.showLanguageDropdown = !this.showLanguageDropdown;
+    
+    // Close other dropdowns
+    this.showAuthDropdown = false;
+    
+    // Add click outside listener
+    if (this.showLanguageDropdown) {
+      setTimeout(() => {
+        document.addEventListener('click', this.closeLanguageDropdown);
+      }, 0);
+    }
+  }
+  
+  closeLanguageDropdown = () => {
+    this.showLanguageDropdown = false;
+    document.removeEventListener('click', this.closeLanguageDropdown);
+  }
+  
+  selectLanguage(language: string, event: Event) {
+    event.stopPropagation();
+    this.selectedLanguage = language;
+    this.showLanguageDropdown = false;
+    
+    // Here you would typically set the language in a language service
+    console.log(`Language changed to: ${language}`);
+    
+    // Example: change text based on selected language
+    // this.translateService.use(language === 'English' ? 'en' : 'si');
+  }
+
   login() {
+    this.showAuthDropdown = false;
     this.router.navigate(['/login']);
   }
 
   logout() {
     this.authService.logout();
     this.currentUser = null;
+    this.cartItemCount = 0;
   }
 
   signup() {
+    this.showAuthDropdown = false;
     this.router.navigate(['/signup']);
   }
 

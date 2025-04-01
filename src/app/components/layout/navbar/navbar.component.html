@@ -45,16 +45,18 @@
     
     <!-- Language Selector -->
     <div class="language-selector" (click)="toggleLanguageDropdown($event)">
-      <img src="assets/icons/{{ selectedLanguage === 'English' ? 'usa flag.webp' : 'Flag-of-Sri-Lanka.webp' }}" alt="{{ selectedLanguage }}" class="flag-icon">
+      <!-- Use SVG for both flags -->
+      <div *ngIf="selectedLanguage === 'English'" class="usa-flag-svg"></div>
+      <div *ngIf="selectedLanguage !== 'English'" class="sri-lanka-flag-svg"></div>
       <span>{{ selectedLanguage }}</span>
       <i class="fas fa-chevron-down"></i>
       <div class="language-dropdown" *ngIf="showLanguageDropdown">
         <div class="dropdown-item" (click)="selectLanguage('English', $event)">
-          <img src="assets/icons/usa flag.webp" alt="English" class="flag-icon">
+          <div class="usa-flag-svg"></div>
           <span>English (USA)</span>
         </div>
         <div class="dropdown-item" (click)="selectLanguage('සිංහල', $event)">
-          <img src="assets/icons/Flag-of-Sri-Lanka.webp" alt="Sinhala" class="flag-icon">
+          <div class="sri-lanka-flag-svg"></div>
           <span>සිංහල (Sri Lanka)</span>
         </div>
       </div>
