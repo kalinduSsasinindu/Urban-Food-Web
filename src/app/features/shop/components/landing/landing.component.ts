@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductCardComponent } from '../products/product-card/product-card.component';
-import { ProductService } from '../../../../core/services';
-import { Product } from '../../../../core/models';
+import { MockProductService } from '../../../../core/services/mock-product.service';
+import { ProductSearchResponse } from '../../../../core/models/product.model';
 
 @Component({
   selector: 'app-landing',
@@ -12,9 +12,9 @@ import { Product } from '../../../../core/models';
   styleUrls: ['./landing.component.css']
 })
 export class LandingComponent implements OnInit {
-  products: Product[] = [];
+  products: ProductSearchResponse[] = [];
 
-  constructor(private productService: ProductService) {}
+  constructor(private productService: MockProductService) {}
 
   ngOnInit() {
     this.productService.getProducts().subscribe(

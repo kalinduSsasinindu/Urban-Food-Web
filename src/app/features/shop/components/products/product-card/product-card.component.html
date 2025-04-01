@@ -1,18 +1,15 @@
 <div class="product-card">
-  <img [src]="product.imageUrl" [alt]="product.name" class="product-image">
+  <img [src]="product.imgUrls && product.imgUrls.length > 0 ? product.imgUrls[0] : 'assets/placeholder-image.jpg'" [alt]="product.title" class="product-image">
   <div class="product-info">
     <div class="product-header">
-      <h3>{{ product.name }}</h3>
-      <div class="rating">
-        <span class="stars">★</span>
-        {{ product.rating }}
+      <h3>{{ product.title }}</h3>
+      <div class="tags" *ngIf="product.tags && product.tags.length > 0">
+        <span *ngFor="let tag of product.tags" class="tag">{{ tag }}</span>
       </div>
     </div>
-    <p class="restaurant">{{ product.restaurant }}</p>
     <p class="description">{{ product.description }}</p>
     <div class="product-footer">
-      <span class="price">${{ product.price.toFixed(2) }}</span>
-      <button class="order-btn">Add to Cart</button>
+      <button class="view-btn">View Details</button>
     </div>
   </div>
 </div> 

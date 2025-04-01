@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Product } from '../../../../../core/models';
+import { ProductSearchResponse } from '../../../../../core/models/product.model';
 
 @Component({
   selector: 'app-product-card',
@@ -10,5 +10,5 @@ import { Product } from '../../../../../core/models';
   styleUrls: ['./product-card.component.css']
 })
 export class ProductCardComponent {
-  @Input() product!: Product;
+  @Input() product!: ProductSearchResponse;
 } 
