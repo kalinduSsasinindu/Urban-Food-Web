@@ -18,20 +18,40 @@
 
 .logo {
   text-align: left;
-  margin-bottom: 20px;
+  margin-bottom: 1.5rem;
 }
 
-.logo-text {
-  font-size: 28px;
+.brand-link {
+  text-decoration: none;
+  font-size: 2rem;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.logo-urban {
+  color: #000000;
   font-weight: bold;
-  color: #4a4a4a;
-  margin: 0;
-  font-family: 'Pacifico', cursive;
+}
+
+.logo-food {
+  color: #ff4747;
+  font-weight: bold;
+}
+
+.logo-icon {
+  color: #ff4747;
+  font-size: 1.25rem;
+  margin-left: 0.25rem;
 }
 
 h1 {
   color: #001e2b;
-  font-size: 24px;
+  font-size: 18px;
   margin-bottom: 8px;
   font-weight: 500;
   text-align: left;
@@ -227,15 +247,15 @@ label {
   border-radius: 6px;
   font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.3s ease;
   font-size: 14px;
-  background-color: #00ed64;
-  color: #001e2b;
+  background-color: #ff4747;
+  color: white;
   margin-top: 10px;
 }
 
 .submit-btn:hover {
-  background-color: #00c862;
+  background-color: #e63c3c;
 }
 
 .submit-btn:disabled {
