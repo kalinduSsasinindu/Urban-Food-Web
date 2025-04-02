@@ -31,7 +31,7 @@
     <form class="signup-form" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
         <label for="email">Email Address</label>
-        <div class="hint">We recommend using your work email</div>
+        
         <input 
           type="email" 
           id="email"
@@ -97,14 +97,7 @@
         </div>
       </div>
       
-      <div class="form-group">
-        <label for="company">Company Name <span class="optional">(Optional)</span></label>
-        <input 
-          type="text" 
-          id="company"
-          formControlName="company"
-          class="form-control">
-      </div>
+      
       
       <div class="form-group terms-group">
         <div class="checkbox-container">

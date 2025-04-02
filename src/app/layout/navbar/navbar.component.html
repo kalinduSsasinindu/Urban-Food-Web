@@ -1,13 +1,54 @@
 <nav class="navbar">
   <div class="navbar-container">
-    <!-- Logo -->
-    <a routerLink="/" class="brand-link">
-      <span class="logo-urban">Urban</span><span class="logo-food">Food</span>
-      <i class="fas fa-utensils logo-icon"></i>
-    </a>
+    <div class="left-section">
+      <!-- Logo -->
+      <a routerLink="/" class="brand-link">
+        <span class="logo-urban">Urban</span><span class="logo-food">Food</span>
+        <i class="fas fa-utensils logo-icon"></i>
+      </a>
+      
+      <!-- Categories Nav Row -->
+      <div class="categories-nav-row">
+        <!-- Categories dropdown below the logo -->
+        <div class="categories-dropdown" [class.active]="isCategoriesOpen">
+          <button class="categories-toggle" (click)="toggleCategories($event)">
+            <i class="fas fa-bars"></i>
+            All Categories
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          
+          <div class="categories-menu" *ngIf="isCategoriesOpen">
+            <a [routerLink]="category.route" class="category-item" *ngFor="let category of categories">
+              <i class="fas" [ngClass]="category.icon"></i>
+              <span>{{ category.displayName }}</span>
+            </a>
+          </div>
+        </div>
+        
+        <!-- Quick Nav Links -->
+        <div class="quick-nav-links">
+          <a routerLink="/trending" class="quick-nav-item">
+            <i class="fas fa-chart-line"></i>
+            <span>Trending</span>
+          </a>
+          <a routerLink="/top-rated" class="quick-nav-item">
+            <i class="fas fa-star"></i>
+            <span>Top Rated</span>
+          </a>
+          <a routerLink="/super-deals" class="quick-nav-item">
+            <i class="fas fa-fire"></i>
+            <span>Super Deals</span>
+          </a>
+          <a *ngIf="isLoggedIn" routerLink="/following" class="quick-nav-item following-link">
+            <i class="fas fa-heart"></i>
+            <span>Following</span>
+          </a>
+        </div>
+      </div>
+    </div>
     
     <!-- Search Bar -->
-    <div class="search-container">
+    <div class="search-container" [ngClass]="{'search-logged-in': isLoggedIn, 'search-logged-out': !isLoggedIn}">
       <input 
         type="text" 
         [(ngModel)]="searchQuery" 
@@ -50,64 +91,109 @@
       </button>
     </div>
     
-    <!-- Home Button -->
-    <a routerLink="/" class="home-btn">
-      <i class="fas fa-home"></i>
-      <span>Home</span>
-    </a>
-    
-    <!-- Language Selector -->
-    <div class="language-selector" (click)="toggleLanguageDropdown($event)">
-      <!-- Use SVG for both flags -->
-      <div *ngIf="selectedLanguage === 'English'" class="usa-flag-svg"></div>
-      <div *ngIf="selectedLanguage !== 'English'" class="sri-lanka-flag-svg"></div>
-      <span>{{ selectedLanguage }}</span>
-      <i class="fas fa-chevron-down"></i>
-      <div class="language-dropdown" *ngIf="showLanguageDropdown">
-        <div class="dropdown-item" (click)="selectLanguage('English', $event)">
-          <div class="usa-flag-svg"></div>
-          <span>English (USA)</span>
-        </div>
-        <div class="dropdown-item" (click)="selectLanguage('සිංහල', $event)">
-          <div class="sri-lanka-flag-svg"></div>
-          <span>සිංහල (Sri Lanka)</span>
-        </div>
-      </div>
-    </div>
-    
-    <!-- User Section -->
-    <div class="user-section">
-      <ng-container *ngIf="isLoggedIn; else authButtons">
-        <div class="user-menu">
-          <i class="fas fa-user"></i>
-          <span>Welcome</span>
-          <button class="account-btn" (click)="navigateToProfile()">
-            My Account <i class="fas fa-chevron-down"></i>
-          </button>
-        </div>
-      </ng-container>
-      <ng-template #authButtons>
-        <div class="user-menu">
-          <i class="fas fa-user"></i>
-          <span>Welcome</span>
-          <button class="account-btn" (click)="toggleAuthDropdown($event)">
-            Sign in / Register <i class="fas fa-chevron-down"></i>
-          </button>
-          <div class="auth-dropdown" *ngIf="showAuthDropdown">
-            <button class="dropdown-btn login-btn" (click)="login()">Login</button>
-            <button class="dropdown-btn signup-btn" (click)="signup()">Sign Up</button>
+    <!-- Right Section: Home, Language, User, Cart -->
+    <div class="right-section">
+      <!-- Home Button -->
+      <a routerLink="/" class="home-btn">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+      </a>
+      
+      <!-- Language Selector -->
+      <div class="language-selector" [class.active]="isLanguageDropdownActive" (click)="toggleLanguageDropdownClick($event)">
+        <!-- Use SVG for both flags -->
+        <div *ngIf="selectedLanguage === 'English'" class="usa-flag-svg"></div>
+        <div *ngIf="selectedLanguage !== 'English'" class="sri-lanka-flag-svg"></div>
+        <span>{{ selectedLanguage }}</span>
+        <i class="fas fa-chevron-down"></i>
+        <div class="language-dropdown" (click)="$event.stopPropagation()">
+          <div class="dropdown-item" (click)="selectLanguage('English', $event)">
+            <div class="usa-flag-svg"></div>
+            <span>English (USA)</span>
+          </div>
+          <div class="dropdown-item" (click)="selectLanguage('සිංහල', $event)">
+            <div class="sri-lanka-flag-svg"></div>
+            <span>සිංහල (Sri Lanka)</span>
           </div>
         </div>
-      </ng-template>
-    </div>
-    
-    <!-- Cart -->
-    <div class="cart-container" (click)="navigateToCart()">
-      <div class="cart-icon">
-        <i class="fas fa-shopping-cart"></i>
-        <span class="cart-count" *ngIf="cartItemCount > 0">{{cartItemCount}}</span>
       </div>
-      <span class="cart-text">Cart</span>
+      
+      <!-- User Section -->
+      <div class="user-section">
+        <ng-container *ngIf="isLoggedIn; else authButtons">
+          <div class="user-menu" [class.active]="isUserDropdownActive">
+            <div class="account-button" (click)="toggleUserDropdown($event)">
+              <i class="fas fa-user"></i>
+              <div class="account-text">
+                <span>Hi, {{userFirstName}}</span>
+                <div class="account-label">Account</div>
+              </div>
+            </div>
+            <div class="user-dropdown" *ngIf="showUserDropdown">
+              <div class="user-dropdown-header">
+                <div class="user-avatar">
+                  <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="user-info">
+                  <span class="welcome-text">Welcome back, {{userFirstName}}</span>
+                  <a class="sign-out-link" (click)="logout()">Sign Out</a>
+                </div>
+              </div>
+              <div class="dropdown-menu-items">
+                <a class="dropdown-menu-item" routerLink="/my-orders">
+                  <i class="fas fa-shopping-bag"></i>
+                  <span>My Orders</span>
+                </a>
+                <a class="dropdown-menu-item" routerLink="/messages">
+                  <i class="fas fa-envelope"></i>
+                  <span>Message Center</span>
+                </a>
+                <a class="dropdown-menu-item" routerLink="/payment">
+                  <i class="fas fa-credit-card"></i>
+                  <span>Payment</span>
+                </a>
+                <a class="dropdown-menu-item" routerLink="/wishlist">
+                  <i class="fas fa-heart"></i>
+                  <span>Wish List</span>
+                </a>
+                <hr class="dropdown-divider">
+                <a class="dropdown-menu-item" routerLink="/settings">
+                  <i class="fas fa-cog"></i>
+                  <span>Settings</span>
+                </a>
+                <a class="dropdown-menu-item" (click)="becomeSeller()">
+                  <i class="fas fa-store"></i>
+                  <span>Become a Seller</span>
+                </a>
+                <a class="dropdown-menu-item" routerLink="/help">
+                  <i class="fas fa-question-circle"></i>
+                  <span>Help Center</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #authButtons>
+          <div class="user-menu">
+            <i class="fas fa-user"></i>
+            <span>Welcome</span>
+            <div class="account-btn-wrapper" (click)="showAuthPopup()">
+              <button class="account-btn">
+                Sign in / Register <i class="fas fa-chevron-down"></i>
+              </button>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+      
+      <!-- Cart -->
+      <div class="cart-container" (click)="navigateToCart()">
+        <div class="cart-icon">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="cart-count" *ngIf="cartItemCount > 0">{{cartItemCount}}</span>
+        </div>
+        <span class="cart-text">Cart</span>
+      </div>
     </div>
   </div>
 </nav>
@@ -116,4 +202,27 @@
   *ngIf="showModal"
   (closeModal)="closeModal()"
   (submitStoreDetails)="onSubmitStoreDetails($event)"
-></app-store-details-modal> 
+></app-store-details-modal>
+
+<!-- Auth Popup Modal -->
+<div class="auth-modal-overlay" *ngIf="showAuthModal" (click)="closeAuthModal($event)"></div>
+<div class="auth-modal" *ngIf="showAuthModal">
+  <div class="auth-modal-header">
+    <h3>Welcome to Urban Food Web</h3>
+    <button class="close-modal-btn" (click)="closeAuthModal($event)">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  <div class="auth-modal-body">
+    <div class="auth-options">
+      <button class="auth-option-btn login-option" (click)="login($event)">
+        <i class="fas fa-sign-in-alt"></i>
+        <span>Login</span>
+      </button>
+      <button class="auth-option-btn register-option" (click)="register($event)">
+        <i class="fas fa-user-plus"></i>
+        <span>Register</span>
+      </button>
+    </div>
+  </div>
+</div> 
