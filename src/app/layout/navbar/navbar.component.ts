@@ -7,6 +7,7 @@ import { AuthService } from '../../core/auth';
 import { UserService } from '../../core/services';
 import { StoreDetails, User } from '../../core/models';
 import { StoreDetailsModalComponent } from '../../shared/components/store-details-modal/store-details-modal.component';
+import { CATEGORIES, Category } from '../../core/models/category.enum';
 
 @Component({
   selector: 'app-navbar',
@@ -20,6 +21,8 @@ export class NavbarComponent implements OnInit {
   searchQuery: string = '';
   showModal: boolean = false;
   showAuthDropdown: boolean = false;
+  showAuthModal: boolean = false;
+  showUserDropdown: boolean = false;
   showImageSearchModal: boolean = false;
   showLanguageDropdown: boolean = false;
   selectedLanguage: string = 'English';
@@ -27,6 +30,12 @@ export class NavbarComponent implements OnInit {
   cartItemCount: number = 0;
   uploadedImageSrc: string | null = null;
   hasUploadedImage: boolean = false;
+  isAuthDropdownActive: boolean = false;
+  isUserDropdownActive: boolean = false;
+  isLanguageDropdownActive: boolean = false;
+  isCategoriesOpen: boolean = false;
+
+  categories: Category[] = CATEGORIES;
 
   constructor(
     private authService: AuthService,
@@ -166,30 +175,12 @@ export class NavbarComponent implements OnInit {
     document.removeEventListener('click', this.closeLanguageDropdown);
   }
   
-  toggleAuthDropdown(event: Event) {
-    event.stopPropagation();
-    this.showAuthDropdown = !this.showAuthDropdown;
-    
-    // Close other dropdowns
-    this.showLanguageDropdown = false;
-    
-    // Add click outside listener
-    if (this.showAuthDropdown) {
-      setTimeout(() => {
-        document.addEventListener('click', this.closeAuthDropdown);
-      }, 0);
-    }
-  }
-  
-  closeAuthDropdown = () => {
-    this.showAuthDropdown = false;
-    document.removeEventListener('click', this.closeAuthDropdown);
-  }
-  
   selectLanguage(language: string, event: Event) {
     event.stopPropagation();
     this.selectedLanguage = language;
     this.showLanguageDropdown = false;
+    this.isLanguageDropdownActive = false;
+    document.removeEventListener('click', this.closeLanguageDropdownOnClick);
     
     // Here you would typically set the language in a language service
     console.log(`Language changed to: ${language}`);
@@ -198,8 +189,30 @@ export class NavbarComponent implements OnInit {
     // this.translateService.use(language === 'English' ? 'en' : 'si');
   }
 
-  login() {
-    this.showAuthDropdown = false;
+  showAuthPopup() {
+    this.showAuthModal = true;
+    // Add overflow:hidden to body to prevent scrolling behind modal
+    document.body.classList.add('modal-open');
+  }
+
+  closeAuthModal(event: Event) {
+    // Only close if clicking on the overlay or the close button
+    if (
+      event.target === document.querySelector('.auth-modal-overlay') ||
+      (event.target as HTMLElement).closest('.close-modal-btn')
+    ) {
+      this.showAuthModal = false;
+      document.body.classList.remove('modal-open');
+    }
+  }
+
+  login(event?: Event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    this.showAuthModal = false;
+    document.body.classList.remove('modal-open');
     this.router.navigate(['/login']);
   }
 
@@ -209,8 +222,24 @@ export class NavbarComponent implements OnInit {
     this.cartItemCount = 0;
   }
 
-  signup() {
+  signup(event?: Event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
     this.showAuthDropdown = false;
+    this.isAuthDropdownActive = false;
+    document.removeEventListener('click', this.closeAuthDropdownOnClick);
+    this.router.navigate(['/signup']);
+  }
+
+  register(event?: Event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    this.showAuthModal = false;
+    document.body.classList.remove('modal-open');
     this.router.navigate(['/signup']);
   }
 
@@ -263,5 +292,170 @@ export class NavbarComponent implements OnInit {
       console.log('Navigating to customer profile');
       this.router.navigate(['/customer-profile']);
     }
+  }
+
+  toggleAuthDropdownClick(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    this.isAuthDropdownActive = !this.isAuthDropdownActive;
+    this.showAuthDropdown = this.isAuthDropdownActive;
+    
+    // Clean up old listener first
+    document.removeEventListener('click', this.closeAuthDropdownOnClick);
+    
+    // Add click outside listener to close dropdown when clicking elsewhere
+    if (this.isAuthDropdownActive) {
+      // Use a slight delay to avoid the current click being immediately registered
+      setTimeout(() => {
+        document.addEventListener('click', this.closeAuthDropdownOnClick);
+      }, 100);
+    }
+  }
+
+  closeAuthDropdownOnClick = (event: Event) => {
+    const dropdown = document.querySelector('.auth-dropdown');
+    const button = document.querySelector('.account-btn');
+    
+    // Don't close if clicking inside dropdown or on the button
+    if (dropdown?.contains(event.target as Node) || 
+        button?.contains(event.target as Node)) {
+      return;
+    }
+    
+    // Close dropdown when clicking outside
+    this.isAuthDropdownActive = false;
+    document.removeEventListener('click', this.closeAuthDropdownOnClick);
+  }
+
+  toggleLanguageDropdownClick(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    this.isLanguageDropdownActive = !this.isLanguageDropdownActive;
+    
+    // Close auth dropdown if open
+    this.isAuthDropdownActive = false;
+    
+    // Clean up old listener first
+    document.removeEventListener('click', this.closeLanguageDropdownOnClick);
+    
+    // Add click outside listener to close dropdown when clicking elsewhere
+    if (this.isLanguageDropdownActive) {
+      // Use a slight delay to avoid the current click being immediately registered
+      setTimeout(() => {
+        document.addEventListener('click', this.closeLanguageDropdownOnClick);
+      }, 100);
+    }
+  }
+
+  closeLanguageDropdownOnClick = (event: Event) => {
+    const dropdown = document.querySelector('.language-dropdown');
+    const selector = document.querySelector('.language-selector span, .language-selector i');
+    
+    // Don't close if clicking inside dropdown or on the selector
+    if (dropdown?.contains(event.target as Node) || 
+        selector?.contains(event.target as Node)) {
+      return;
+    }
+    
+    // Close dropdown when clicking outside
+    this.isLanguageDropdownActive = false;
+    document.removeEventListener('click', this.closeLanguageDropdownOnClick);
+  }
+
+  // Add a getter for the user's first name
+  get userFirstName(): string {
+    if (!this.currentUser || !this.currentUser.name) {
+      return 'User';
+    }
+    
+    // If the name comes from Google (usually in "First Last" format)
+    // Extract just the first name
+    const fullName = this.currentUser.name;
+    const firstSpace = fullName.indexOf(' ');
+    
+    if (firstSpace > 0) {
+      // Return just the first part of the name (before the first space)
+      return fullName.substring(0, firstSpace);
+    }
+    
+    // If there's no space, return the whole name
+    return fullName;
+  }
+
+  toggleUserDropdown(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    this.isUserDropdownActive = !this.isUserDropdownActive;
+    this.showUserDropdown = this.isUserDropdownActive;
+    
+    // Clean up old listener first
+    document.removeEventListener('click', this.closeUserDropdownOnClick);
+    
+    // Add click outside listener to close dropdown when clicking elsewhere
+    if (this.isUserDropdownActive) {
+      // Use a slight delay to avoid the current click being immediately registered
+      setTimeout(() => {
+        document.addEventListener('click', this.closeUserDropdownOnClick);
+      }, 100);
+    }
+  }
+
+  closeUserDropdownOnClick = (event: Event) => {
+    const dropdown = document.querySelector('.user-dropdown');
+    const button = document.querySelector('.account-button');
+    
+    // Don't close if clicking inside dropdown or on the button
+    if (dropdown?.contains(event.target as Node) || 
+        button?.contains(event.target as Node)) {
+      return;
+    }
+    
+    // Close dropdown when clicking outside
+    this.isUserDropdownActive = false;
+    this.showUserDropdown = false;
+    document.removeEventListener('click', this.closeUserDropdownOnClick);
+  }
+
+  becomeSeller() {
+    this.showBecomeSellerModal();
+    // Close the user dropdown
+    this.isUserDropdownActive = false;
+    this.showUserDropdown = false;
+    document.removeEventListener('click', this.closeUserDropdownOnClick);
+  }
+
+  toggleCategories(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    this.isCategoriesOpen = !this.isCategoriesOpen;
+    
+    // Clean up old listener first
+    document.removeEventListener('click', this.closeCategoriesOnClick);
+    
+    // Add click outside listener to close dropdown when clicking elsewhere
+    if (this.isCategoriesOpen) {
+      setTimeout(() => {
+        document.addEventListener('click', this.closeCategoriesOnClick);
+      }, 100);
+    }
+  }
+
+  closeCategoriesOnClick = (event: Event) => {
+    const menu = document.querySelector('.categories-menu');
+    const toggle = document.querySelector('.categories-toggle');
+    
+    // Don't close if clicking inside menu or on the toggle button
+    if (menu?.contains(event.target as Node) || 
+        toggle?.contains(event.target as Node)) {
+      return;
+    }
+    
+    // Close menu when clicking outside
+    this.isCategoriesOpen = false;
+    document.removeEventListener('click', this.closeCategoriesOnClick);
   }
 } 
