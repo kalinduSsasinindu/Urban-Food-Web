@@ -127,11 +127,11 @@
     </div>
 
     <!-- Variants Card -->
-    <div class="card" *ngIf="generatedVariants.length > 0">
+    <div class="card" *ngIf="generatedVariants.length > 0 || isVariantsLoading">
       <h2>Variants</h2>
       <p class="subtitle">Set price and inventory for each variant</p>
       
-      <div class="variants-table">
+      <div class="variants-table" *ngIf="!isVariantsLoading; else variantsLoading">
         <div class="variants-header">
           <div class="variant-col">Variant</div>
           <div class="price-col">Price</div>
@@ -157,6 +157,13 @@
           </div>
         </div>
       </div>
+
+      <ng-template #variantsLoading>
+        <div class="variants-loading">
+          <div class="loader"></div>
+          <p>Loading variants...</p>
+        </div>
+      </ng-template>
     </div>
 
     <!-- Tags Card -->
@@ -197,4 +204,4 @@
       </button>
     </div>
   </form>
-</div> 
+</div>

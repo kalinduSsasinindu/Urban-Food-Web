@@ -409,6 +409,30 @@ button {
   padding-left: 24px;
 }
 
+/* Variants Loading */
+.variants-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  min-height: 100px;
+}
+
+.variants-loading .loader {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #4a90e2;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+.variants-loading p {
+  margin: 0;
+  color: #666;
+}
+
 /* Tags */
 .tags-container {
   padding: 10px 0;
@@ -530,4 +554,4 @@ button {
     overflow: hidden;
     text-overflow: ellipsis;
   }
-} 
+}
