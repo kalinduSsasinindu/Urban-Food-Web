@@ -37,7 +37,6 @@ export class AddProductComponent implements OnInit {
   productForm!: FormGroup;
   isLoading = false;
   isSubmitting = false;
-  isVariantsLoading = false; // New flag for variants loading
   imagePreview: { url: string; selected: boolean }[] = [];
   generatedVariants: ProductVariant[] = [];
   displayedColumns: string[] = ['variantName', 'price', 'availableQuantity'];
@@ -48,6 +47,7 @@ export class AddProductComponent implements OnInit {
   isDuplicated = false;
   hasUnsavedChanges = false;
   
+  // Tags support
   tags: string[] = [];
   filteredTags: Observable<any[]> = of([]);
   tagSearchControl = new FormControl('');
@@ -246,7 +246,11 @@ export class AddProductComponent implements OnInit {
 
   triggerFileInput(event: Event): void {
     event.preventDefault();
-    this.fileInput.nativeElement.click();
+    if (this.fileInput?.nativeElement) {
+      this.fileInput.nativeElement.click();
+    } else {
+      console.warn('File input element not found');
+    }
   }
   
   toggleImageSelection(index: number): void {
@@ -275,13 +279,15 @@ export class AddProductComponent implements OnInit {
     const selectedIndices = this.imagePreview
       .map((img, index) => img.selected ? index : -1)
       .filter(index => index !== -1)
-      .sort((a, b) => b - a);
+      .sort((a, b) => b - a); // Sort in descending order to remove from end to start
 
+    // Remove from the imagesFormArray as well
     const imagesArray = this.productForm.get('images') as FormArray;
     selectedIndices.forEach(index => {
       imagesArray.removeAt(index);
     });
 
+    // Remove from the preview array
     selectedIndices.forEach(index => {
       this.imagePreview.splice(index, 1);
     });
@@ -348,64 +354,34 @@ export class AddProductComponent implements OnInit {
   
   private setupVariantGeneration(): void {
     const optionsArray = this.productForm.get('options') as FormArray;
-    optionsArray.valueChanges.pipe(
-      debounceTime(300)
-    ).subscribe(() => {
-      this.generateVariants();
-    });
-  }
-  
-  generateVariants(): void {
-    const options = this.optionsFormArray.value as VariantOption[];
-    if (!options.length) {
-      this.generatedVariants = [];
-      return;
-    }
-
-    this.isVariantsLoading = true;
-    this.productService.generateVariants(options).subscribe({
-      next: (variants) => {
-        const mappedVariants = variants.map(variant => ({
-          variantId: variant.variantId,
-          sku: variant.sku,
-          name: variant.name,
-          price: variant.price || 0,
-          availableQuantity: variant.availableQuantity || 0,
-          committedQuantity: variant.committedQuantity || 0,
-          isActive: variant.isActive
+    optionsArray.valueChanges.subscribe(() => {
+      if (this.isEditMode) {
+        // Store current variant data before regenerating
+        const currentVariants = this.generatedVariants.map(v => ({
+          name: v.name,
+          price: v.price,
+          availableQuantity: v.availableQuantity,
+          committedQuantity: v.committedQuantity
         }));
 
-        if (this.isEditMode) {
-          const currentVariants = this.generatedVariants.map(v => ({
-            name: v.name,
-            price: v.price,
-            availableQuantity: v.availableQuantity,
-            committedQuantity: v.committedQuantity
-          }));
+        // Generate new variants
+        this.generateVariants();
 
-          this.generatedVariants = mappedVariants.map(variant => {
-            const existing = currentVariants.find(e => e.name === variant.name);
-            return existing ? {
+        // Restore data for matching variants
+        this.generatedVariants = this.generatedVariants.map(variant => {
+          const existing = currentVariants.find(e => e.name === variant.name);
+          if (existing) {
+            return {
               ...variant,
               price: existing.price,
               availableQuantity: existing.availableQuantity,
               committedQuantity: existing.committedQuantity
-            } : variant;
-          });
-        } else {
-          this.generatedVariants = mappedVariants;
-        }
-
-        this.isVariantsLoading = false;
-      },
-      error: (error) => {
-        this.isVariantsLoading = false;
-        this.notifierService.showNotification(
-          'Failed to generate variants',
-          'OK',
-          NotificationType.ERROR
-        );
-        console.error('Variant generation error:', error);
+            };
+          }
+          return variant;
+        });
+      } else {
+        this.generateVariants();
       }
     });
   }
@@ -414,11 +390,13 @@ export class AddProductComponent implements OnInit {
     this.isLoading = true;
     this.productService.getProductById(id).subscribe({
       next: (product) => {
+        // Set form values
         this.productForm.patchValue({
           title: product.title,
           description: product.description
         });
 
+        // Load images
         if (product.imgUrls && product.imgUrls.length > 0) {
           this.imagePreview = product.imgUrls.map(url => ({
             url,
@@ -428,8 +406,10 @@ export class AddProductComponent implements OnInit {
           product.imgUrls.forEach(url => this.addImageUrl(url));
         }
 
+        // Load options and generate variants
         this.loadOptions(product);
 
+        // Map existing variants with their prices and quantities
         if (product.variants && product.variants.length > 0) {
           this.generatedVariants = product.variants.map(variant => ({
             ...variant,
@@ -440,6 +420,7 @@ export class AddProductComponent implements OnInit {
           }));
         }
 
+        // Handle tags
         this.tags = product.tags || [];
         this.initialTags = [...this.tags];
         this.isTagDataDirty = false;
@@ -498,6 +479,7 @@ export class AddProductComponent implements OnInit {
       const optionsArray = control as FormArray;
       const errors: ValidationErrors = {};
       
+      // Check for duplicate option names
       const optionNames = optionsArray.controls.map(
         option => (option as FormGroup).get('name')?.value?.trim().toLowerCase()
       );
@@ -507,6 +489,7 @@ export class AddProductComponent implements OnInit {
         errors['duplicateOptionNames'] = true;
       }
       
+      // Check for duplicate values within each option
       let hasDuplicateValues = false;
       optionsArray.controls.forEach(option => {
         const valuesArray = (option as FormGroup).get('values') as FormArray;
@@ -540,6 +523,7 @@ export class AddProductComponent implements OnInit {
   removeOption(event: Event, index: number): void {
     event.preventDefault();
     this.optionsFormArray.removeAt(index);
+    this.generateVariants();
   }
   
   addOptionValue(event: Event, optionIndex: number): void {
@@ -556,6 +540,19 @@ export class AddProductComponent implements OnInit {
     if (valuesArray.length === 0) {
       this.removeOption(event, optionIndex);
     }
+  }
+  
+  generateVariants(): void {
+    const options = this.optionsFormArray.value as VariantOption[];
+    if (!options.length) {
+      this.generatedVariants = [];
+      return;
+    }
+
+    // Convert Observable<ProductVariant[]> to ProductVariant[] 
+    this.productService.generateVariants(options).subscribe(variants => {
+      this.generatedVariants = variants;
+    });
   }
   
   updateVariantPrice(variant: ProductVariant, event: any): void {
@@ -588,11 +585,13 @@ export class AddProductComponent implements OnInit {
       next: (product) => {
         const duplicatedTitle = `${product.title} (Copy)`;
         
+        // Reset the form with the duplicated data
         this.productForm.patchValue({
           title: duplicatedTitle,
           description: product.description
         });
         
+        // Handle images
         if (withMedia && product.imgUrls && product.imgUrls.length > 0) {
           this.imagePreview = product.imgUrls.map(url => ({
             url,
@@ -606,8 +605,10 @@ export class AddProductComponent implements OnInit {
           this.imagesFormArray.clear();
         }
         
+        // Handle options
         this.loadOptions(product);
         
+        // Handle variants with prices and quantities
         this.generatedVariants = product.variants && product.variants.length > 0 
           ? product.variants.map(variant => ({
               ...variant,
@@ -617,15 +618,18 @@ export class AddProductComponent implements OnInit {
             }))
           : [this.createDefaultVariant(0, duplicatedTitle)];
           
+        // Handle tags
         this.tags = [...(product.tags || [])];
         this.initialTags = [...this.tags];
         this.tagSearchControl.setValue('');
         
+        // Set duplication mode
         this.isDuplicated = true;
         this.productId = null;
         this.isEditMode = false;
         this.hasUnsavedChanges = true;
         
+        // Update UI
         this.isLoading = false;
         this.isTagCardDisabled = false;
         
@@ -672,9 +676,11 @@ export class AddProductComponent implements OnInit {
 
     this.imagePreview.forEach(img => {
       if (img.url.startsWith('data:')) {
+        // This is a base64 image
         const base64Data = img.url.split(',')[1];
         images.push(base64Data);
       } else {
+        // This is an existing image URL
         imgUrls.push(img.url);
       }
     });
@@ -697,6 +703,7 @@ export class AddProductComponent implements OnInit {
 
     this.ensureVariantsExist();
 
+    // Validate variants have valid data
     const invalidVariants = this.generatedVariants.filter(
       variant => 
         (variant.price !== undefined && variant.price < 0) || 
@@ -746,6 +753,7 @@ export class AddProductComponent implements OnInit {
       }
 
       if (this.isEditMode && this.productId) {
+        // Update existing product
         this.productService.updateProduct(productData)
           .subscribe({
             next: () => {
@@ -772,6 +780,7 @@ export class AddProductComponent implements OnInit {
             }
           });
       } else {
+        // Create a new product
         this.productService.createProduct(productData)
           .subscribe({
             next: (newProductId: string) => {
@@ -816,4 +825,4 @@ export class AddProductComponent implements OnInit {
       );
     }
   }
-}
+} 

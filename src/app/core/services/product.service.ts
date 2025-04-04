@@ -75,20 +75,7 @@ export class ProductService {
   }
 
   // Generate product variants
-  // In ProductService
-generateVariants(options: VariantOption[]): Observable<ProductVariant[]> {
-  if (!options || options.length === 0) {
-    return of([]);
-  }
-
-  return this.apiService.post<ProductVariant[]>(`${this.apiUrl}/GenerateVariants`, options).pipe(
-    catchError(error => {
-      console.error('Error generating variants:', error);
-      return throwError(() => new Error('Failed to generate variants'));
-    })
-  );
-}
-  generateVariants2(options: VariantOption[]): Observable<ProductVariant[]> {
+  generateVariants(options: VariantOption[]): Observable<ProductVariant[]> {
     if (!options || options.length === 0) {
       return of([]);
     }

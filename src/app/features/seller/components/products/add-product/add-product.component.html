@@ -56,9 +56,10 @@
           </div>
           <p>Drag & drop images here or click to browse</p>
           <button class="upload-btn" (click)="triggerFileInput($event)">Browse Files</button>
-          <input #fileInput type="file" accept="image/*" multiple (change)="onFileSelected($event)" style="display: none;">
         </div>
       </div>
+
+      <input #fileInput type="file" accept="image/*" multiple (change)="onFileSelected($event)" style="display: none;">
 
       <div class="media-preview" *ngIf="hasImages()">
         <div class="preview-header">
@@ -127,11 +128,11 @@
     </div>
 
     <!-- Variants Card -->
-    <div class="card" *ngIf="generatedVariants.length > 0 || isVariantsLoading">
+    <div class="card" *ngIf="generatedVariants.length > 0">
       <h2>Variants</h2>
       <p class="subtitle">Set price and inventory for each variant</p>
       
-      <div class="variants-table" *ngIf="!isVariantsLoading; else variantsLoading">
+      <div class="variants-table">
         <div class="variants-header">
           <div class="variant-col">Variant</div>
           <div class="price-col">Price</div>
@@ -157,13 +158,6 @@
           </div>
         </div>
       </div>
-
-      <ng-template #variantsLoading>
-        <div class="variants-loading">
-          <div class="loader"></div>
-          <p>Loading variants...</p>
-        </div>
-      </ng-template>
     </div>
 
     <!-- Tags Card -->
@@ -204,4 +198,4 @@
       </button>
     </div>
   </form>
-</div>
+</div> 
