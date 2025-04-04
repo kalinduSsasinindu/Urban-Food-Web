@@ -961,6 +961,15 @@ body.modal-open {
   transition: color 0.2s ease;
 }
 
+.active-menu-item {
+  background-color: #fff0f0;
+}
+
+.active-menu-item i,
+.active-menu-item span {
+  color: #ff4747;
+}
+
 .dropdown-divider {
   margin: 8px 0;
   border: none;
