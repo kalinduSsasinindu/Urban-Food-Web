@@ -84,17 +84,18 @@ import { ProductSearchResponse } from '../../../../core/models/product.model';
     }
     
     .add-product-btn {
-      background-color: #4CAF50;
+      background-color: #ff4747;
       color: white;
       border: none;
       padding: 0.5rem 1rem;
       border-radius: 4px;
       cursor: pointer;
       font-size: 0.9rem;
+      transition: all 0.2s ease;
     }
     
     .add-product-btn:hover {
-      background-color: #45a049;
+      background-color: #e63e3e;
     }
     
     .search-section {
@@ -111,16 +112,17 @@ import { ProductSearchResponse } from '../../../../core/models/product.model';
     }
     
     .search-btn {
-      background-color: #2196F3;
+      background-color: #ff4747;
       color: white;
       border: none;
       padding: 0.5rem 1rem;
       border-radius: 0 4px 4px 0;
       cursor: pointer;
+      transition: all 0.2s ease;
     }
     
     .search-btn:hover {
-      background-color: #0b7dda;
+      background-color: #e63e3e;
     }
     
     .products-table {
@@ -182,15 +184,17 @@ import { ProductSearchResponse } from '../../../../core/models/product.model';
       border-radius: 4px;
       cursor: pointer;
       font-size: 0.8rem;
+      transition: all 0.2s ease;
     }
     
     .edit-btn {
-      background-color: #2196F3;
+      background-color: #4a90e2;
       color: white;
+      transition: all 0.2s ease;
     }
     
     .edit-btn:hover {
-      background-color: #0b7dda;
+      background-color: #3a7bc8;
     }
     
     .delete-btn {

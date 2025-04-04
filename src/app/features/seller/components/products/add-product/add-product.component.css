@@ -99,23 +99,32 @@ button {
   background-color: #f5f5f5;
   color: #333;
   border: 1px solid #ccc;
+  transition: all 0.2s ease;
+  font-weight: 500;
 }
 
 .secondary-btn:hover {
-  background-color: #e0e0e0;
+  color: #ff4747;
+  background-color: white;
+  border-color: #ccc;
 }
 
 .primary-btn {
-  background-color: #4a90e2;
+  background-color: #ff4747;
   color: white;
+  transition: all 0.2s ease;
+  padding: 10px 24px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  border: none;
 }
 
 .primary-btn:hover {
-  background-color: #3a7bc8;
+  background-color: #e63e3e;
 }
 
 .primary-btn:disabled {
-  background-color: #b3b3b3;
+  background-color: #ffb3b3;
   cursor: not-allowed;
 }
 
@@ -123,24 +132,30 @@ button {
   background-color: #f5f5f5;
   color: #333;
   border: 1px solid #ccc;
+  transition: all 0.2s ease;
+  font-weight: 500;
 }
 
 .action-btn:hover {
-  background-color: #e0e0e0;
+  color: #ff4747;
+  background-color: white;
+  border-color: #ccc;
 }
 
 .add-option-btn, .add-value-btn {
   background-color: transparent;
-  color: #4a90e2;
+  color: #ff4747;
   padding: 6px 12px;
   font-weight: 500;
   display: flex;
   align-items: center;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #ffcccc;
+  transition: all 0.2s ease;
 }
 
 .add-option-btn:hover, .add-value-btn:hover {
-  background-color: #f5f5f5;
+  background-color: rgba(255, 71, 71, 0.1);
+  color: #e63e3e;
 }
 
 .remove-btn {
@@ -148,11 +163,14 @@ button {
   color: #666;
   padding: 6px 10px;
   border: 1px solid #e0e0e0;
+  transition: all 0.2s ease;
+  font-weight: 500;
 }
 
 .remove-btn:hover {
-  background-color: #f5f5f5;
-  color: #d32f2f;
+  color: #ff4747;
+  background-color: white;
+  border-color: #ccc;
 }
 
 .remove-btn.disabled {
@@ -167,22 +185,26 @@ button {
   font-size: 16px;
   border-radius: 50%;
   border: none;
+  transition: all 0.2s ease;
 }
 
 .remove-value-btn:hover {
-  background-color: #f5f5f5;
-  color: #d32f2f;
+  color: #ff4747;
+  background-color: white;
 }
 
 .add-more-btn {
   background-color: transparent;
-  color: #4a90e2;
+  color: #ff4747;
   padding: 6px 12px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #ffcccc;
+  transition: all 0.2s ease;
+  font-weight: 500;
 }
 
 .add-more-btn:hover {
-  background-color: #f5f5f5;
+  background-color: rgba(255, 71, 71, 0.1);
+  color: #e63e3e;
 }
 
 /* Media Upload */
@@ -485,8 +507,15 @@ button {
 }
 
 .add-tag-btn {
-  background-color: #4a90e2;
+  background-color: #ff4747;
   color: white;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  border: none;
+}
+
+.add-tag-btn:hover {
+  background-color: #e63e3e;
 }
 
 .tag-actions {
@@ -499,11 +528,24 @@ button {
   background-color: #f5f5f5;
   color: #666;
   border: 1px solid #ccc;
+  transition: all 0.2s ease;
+}
+
+.cancel-btn:hover {
+  color: #ff4747;
+  background-color: white;
 }
 
 .save-btn {
-  background-color: #4a90e2;
+  background-color: #ff4747;
   color: white;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  border: none;
+}
+
+.save-btn:hover {
+  background-color: #e63e3e;
 }
 
 /* Loading */
