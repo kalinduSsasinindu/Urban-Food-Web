@@ -28,6 +28,8 @@ export interface ProductVariant {
   sku: string;
   name: string;
   price?: number;
+  originalPrice?: number;
+  discountPercentage?: number;
   availableQuantity?: number;
   committedQuantity?: number;
   isActive: boolean;
@@ -41,6 +43,13 @@ export interface ProductSearchResponse {
   price: number;
   imgUrl: string;
   tags: string[];
+  originalPrice?: number;
+  discountPercentage?: number;
+  rating?: number;
+  reviewsCount?: number;
+  soldCount?: number;
+  deliveryTime?: string;
+  variants?: string[];
 }
 
 export interface MediaServiceDto {
