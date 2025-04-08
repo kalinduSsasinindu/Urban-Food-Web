@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, ActivatedRoute } from '@angular/router';
+import { ProductService } from '../../../../../core/services/product.service';
+import { Product, ProductType } from '../../../../../core/models/product.model';
 
 @Component({
   selector: 'app-product-detail',
@@ -9,31 +11,91 @@ import { RouterModule } from '@angular/router';
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.css']
 })
-export class ProductDetailComponent {
+export class ProductDetailComponent implements OnInit {
   selectedImageIndex = 0;
-  productImages = [
-    'https://ae01.alicdn.com/kf/S661f3b6c7fa24798b56a726f4ffd0fddp/V8-New-Mini-Drone-4k-profession-HD-1080P-Wide-Angle-Camera-WiFi-FPV-RC-Dron-Height.jpg_Q90.jpg',
-    'https://ae01.alicdn.com/kf/S30f4e0adecdf43efb67e84ec4725de9fa/V8-New-Mini-Drone-4k-profession-HD-1080P-Wide-Angle-Camera-WiFi-FPV-RC-Dron-Height.jpg_Q90.jpg',
-    'https://ae01.alicdn.com/kf/Seccb32238fc84517baf316cc1fdf13c8M/V8-New-Mini-Drone-4k-profession-HD-1080P-Wide-Angle-Camera-WiFi-FPV-RC-Dron-Height.jpg_Q90.jpg'
-  ];
+  productId: string | null = null;
+  product: Product | null = null;
+  loading = true;
+  error = false;
+  quantity = 1;
+  ProductType = ProductType; // Make enum available to template
+
+  constructor(
+    private route: ActivatedRoute,
+    private productService: ProductService
+  ) {}
+
+  ngOnInit(): void {
+    this.route.paramMap.subscribe(params => {
+      this.productId = params.get('id');
+      if (this.productId) {
+        this.loadProductDetails(this.productId);
+      }
+    });
+  }
+
+  loadProductDetails(id: string): void {
+    this.loading = true;
+    this.error = false;
+    
+    this.productService.getProductDetailsById(id).subscribe({
+      next: (product: Product) => {
+        this.product = product;
+        this.loading = false;
+        console.log('Product details loaded:', product);
+      },
+      error: (err: any) => {
+        console.error('Error loading product details:', err);
+        this.error = true;
+        this.loading = false;
+      }
+    });
+  }
+
+  getProductTypeName(productType: ProductType): string {
+    switch(productType) {
+      case ProductType.Fruit:
+        return 'Fruit';
+      case ProductType.Vegetable:
+        return 'Vegetable';
+      case ProductType.DairyProduct:
+        return 'Dairy Product';
+      case ProductType.BakedGood:
+        return 'Baked Good';
+      case ProductType.HandmadeCraft:
+        return 'Handmade Craft';
+      default:
+        return 'Unknown';
+    }
+  }
 
   selectImage(index: number): void {
     this.selectedImageIndex = index;
   }
 
   decreaseQuantity(): void {
-    // Functionality for the - button
+    if (this.quantity > 1) {
+      this.quantity--;
+    }
   }
 
   increaseQuantity(): void {
-    // Functionality for the + button
+    this.quantity++;
   }
 
   addToCart(): void {
-    // Add to cart functionality
+    if (this.product) {
+      console.log('Adding to cart:', this.product.id, 'Quantity:', this.quantity);
+      // TODO: Implement actual cart functionality
+      alert(`Added ${this.quantity} item(s) to cart!`);
+    }
   }
 
   buyNow(): void {
-    // Buy now functionality
+    if (this.product) {
+      console.log('Buy now:', this.product.id, 'Quantity:', this.quantity);
+      // TODO: Implement checkout functionality
+      alert('Proceeding to checkout...');
+    }
   }
 } 

@@ -183,4 +183,9 @@ export class ProductService {
     }
     return this.apiService.get<Product[]>(url, params);
   }
+
+  // Get product details by ID without client filtering
+  getProductDetailsById(id: string): Observable<Product> {
+    return this.apiService.get<Product>(`${this.apiUrl}/customergetproductdetailsbyid/${id}`);
+  }
 } 

@@ -1,34 +1,35 @@
-<div class="product-detail-container">
+<div class="product-detail-container" *ngIf="!loading && product; else loadingTemplate">
   <div class="product-gallery">
     <div class="main-image">
-      <img [src]="productImages[selectedImageIndex]" alt="Drone">
+      <img [src]="product.imgUrls?.[selectedImageIndex] || 'assets/placeholder-image.jpg'" [alt]="product.title">
     </div>
-    <div class="thumbnail-carousel">
+    <div class="thumbnail-carousel" *ngIf="product.imgUrls && product.imgUrls.length > 0">
       <div 
-        *ngFor="let img of productImages; let i = index" 
+        *ngFor="let img of product.imgUrls; let i = index" 
         class="thumbnail" 
         [class.active]="selectedImageIndex === i"
         (click)="selectImage(i)"
       >
-        <img [src]="img" [alt]="'Drone thumbnail ' + (i+1)">
+        <img [src]="img" [alt]="product.title + ' thumbnail ' + (i+1)">
       </div>
     </div>
   </div>
 
   <div class="product-info">
     <div class="product-header">
-      <div class="hd-badge">4K ULTRA HD</div>
+      <div class="hd-badge" *ngIf="product.productType">{{getProductTypeName(product.productType)}}</div>
       <div class="price-section">
         <div class="price-container">
-          <span class="current-price">LKR6,619.85</span>
-          <span class="original-price">LKR13,791.35</span>
-          <span class="discount-badge">52% off</span>
+          <span class="current-price" *ngIf="product.variants && product.variants.length > 0">
+            LKR{{(product.variants[0]?.price || 0).toFixed(2)}}
+          </span>
         </div>
         <div class="tax-info">Tax excluded, add at checkout if applicable : Extra 2% off with coins</div>
       </div>
     </div>
 
-    <h1 class="product-title">V8 New Mini Drone 4k profession HD 1080P Wide Angle Camera WiFi FPV RC Dron Height Keep Drones Helicopter Kids Toys 4DRC</h1>
+    <h1 class="product-title">{{product.title}}</h1>
+    <p class="product-description">{{product.description}}</p>
 
     <div class="return-policy">
       <div class="policy-item">
@@ -43,34 +44,11 @@
       </div>
     </div>
 
-    <!-- Sold By Section -->
-    <div class="sold-by-section">
-      <h3>Sold By</h3>
-      <div class="store-info">
-        <div class="store-avatar">
-          <img src="https://ae01.alicdn.com/kf/S7ae23ee350eb46b9a3bbcd2a0ddc98aeU/251x251.png" alt="Store Logo">
-        </div>
-        <div class="store-details">
-          <div class="store-name">Tech Gadgets Official Store</div>
-          <div class="store-stats">
-            <div class="stat-item">
-              <div class="label">Positive Feedback</div>
-              <div class="value">97.3%</div>
-            </div>
-            <div class="stat-item">
-              <div class="label">Ship on time</div>
-              <div class="value">99%</div>
-            </div>
-            <div class="stat-item">
-              <div class="label">Response rate</div>
-              <div class="value">98%</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="store-buttons">
-        <button class="visit-store-btn">Visit Store</button>
-        <button class="follow-store-btn">Follow</button>
+    <!-- Tags Section -->
+    <div class="tags-section" *ngIf="product.tags && product.tags.length > 0">
+      <h3>Tags</h3>
+      <div class="tags-list">
+        <span class="tag" *ngFor="let tag of product.tags">{{tag}}</span>
       </div>
     </div>
 
@@ -78,10 +56,12 @@
       <h3>Quantity</h3>
       <div class="quantity-control">
         <button class="quantity-btn" (click)="decreaseQuantity()">-</button>
-        <span class="quantity-value">1</span>
+        <span class="quantity-value">{{quantity}}</span>
         <button class="quantity-btn" (click)="increaseQuantity()">+</button>
       </div>
-      <div class="max-quantity">Max. 1 pcs/shopper</div>
+      <div class="max-quantity" *ngIf="product.variants && product.variants.length > 0">
+        {{product.variants[0]?.availableQuantity || 0}} available
+      </div>
     </div>
 
     <div class="action-buttons">
@@ -96,11 +76,28 @@
       </button>
       <button class="wishlist-btn">
         <i class="far fa-heart"></i>
-        <span>847</span>
+        <span>Add to wishlist</span>
       </button>
     </div>
   </div>
 </div>
+
+<!-- Loading Template -->
+<ng-template #loadingTemplate>
+  <div class="loading-container" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Loading product details...</p>
+  </div>
+  
+  <div class="error-container" *ngIf="error">
+    <div class="error-icon">
+      <i class="fas fa-exclamation-circle"></i>
+    </div>
+    <h2>Oops! Something went wrong</h2>
+    <p>We couldn't load the product details. Please try again later.</p>
+    <button class="retry-btn" (click)="loadProductDetails(productId || '')">Retry</button>
+  </div>
+</ng-template>
 
 <!-- Customer Reviews Section -->
 <div class="reviews-container">
