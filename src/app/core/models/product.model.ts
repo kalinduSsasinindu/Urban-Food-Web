@@ -16,6 +16,46 @@ export interface Product {
   variants: ProductVariant[];
   options: VariantOption[];
   tags?: string[];
+  productReviews?: ProductReview[];
+  averageRating?: number;
+  reviewCount?: number;
+  featuredReviewId?: string;
+}
+
+export interface ProductReview {
+  id?: string;
+  productId?: string;
+  reviewerId?: string;
+  reviewerName?: string;
+  reviewerProfilePicture?: string;
+  rating?: number;
+  comment?: string;
+  reviewImages?: string[];
+  likesCount?: number;
+  isFeatured?: boolean;
+  createdAt?: Date;
+  isVerified?: boolean;
+  isDeleted?: boolean;
+}
+
+export interface CreateProductReviewDto {
+  rating?: number;
+  comment?: string;
+  reviewImages?: string[];
+}
+
+export interface UpdateProductReviewDto {
+  rating?: number;
+  comment?: string;
+  newReviewImages?: string[];
+  imageUrlsToRemove?: string[];
+}
+
+export interface ProductReviewSummary {
+  averageRating?: number;
+  reviewCount?: number;
+  featuredReview?: ProductReview;
+  ratingDistribution?: { [key: number]: number };
 }
 
 export interface VariantOption {

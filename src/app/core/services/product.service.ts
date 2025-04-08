@@ -7,7 +7,11 @@ import {
   ProductVariant, 
   VariantOption, 
   MediaServiceDto, 
-  ProductType
+  ProductType,
+  ProductReview,
+  CreateProductReviewDto,
+  UpdateProductReviewDto,
+  ProductReviewSummary
 } from '../models/product.model';
 import { ApiService } from './api.service';
 import { environment } from '../../utils/config';
@@ -187,5 +191,41 @@ export class ProductService {
   // Get product details by ID without client filtering
   getProductDetailsById(id: string): Observable<Product> {
     return this.apiService.get<Product>(`${this.apiUrl}/customergetproductdetailsbyid/${id}`);
+  }
+
+  // Get product reviews
+  getProductReviews(productId: string): Observable<ProductReview[]> {
+    return this.apiService.get<ProductReview[]>(`${this.apiUrl}/${productId}/reviews`);
+  }
+
+  // Get product review summary
+  getProductReviewSummary(productId: string): Observable<ProductReviewSummary> {
+    return this.apiService.get<ProductReviewSummary>(`${this.apiUrl}/${productId}/review-summary`);
+  }
+
+  // Add a review to a product
+  addProductReview(productId: string, review: CreateProductReviewDto): Observable<ProductReview> {
+    return this.apiService.post<ProductReview>(`${this.apiUrl}/${productId}/reviews`, review);
+  }
+
+  // Update a product review
+  updateProductReview(productId: string, reviewId: string, review: UpdateProductReviewDto): Observable<ProductReview> {
+    return this.apiService.put<ProductReview>(`${this.apiUrl}/${productId}/reviews/${reviewId}`, review);
+  }
+
+  // Delete a product review
+  deleteProductReview(productId: string, reviewId: string): Observable<boolean> {
+    return this.apiService.delete(`${this.apiUrl}/${productId}/reviews/${reviewId}`).pipe(
+      map(() => true),
+      catchError(error => {
+        console.error('Error deleting product review:', error);
+        return throwError(() => new Error('Failed to delete product review'));
+      })
+    );
+  }
+
+  // Like a product review
+  likeProductReview(productId: string, reviewId: string): Observable<number> {
+    return this.apiService.post<number>(`${this.apiUrl}/${productId}/reviews/${reviewId}/like`, {});
   }
 } 

@@ -31,6 +31,20 @@
     <h1 class="product-title">{{product.title}}</h1>
     <p class="product-description">{{product.description}}</p>
 
+    <!-- Rating Summary -->
+    <div class="product-rating" *ngIf="product.averageRating !== undefined">
+      <div class="stars">
+        <i *ngFor="let star of [1, 2, 3, 4, 5]" 
+           class="fa" 
+           [ngClass]="{'fa-star': star <= product.averageRating!, 
+                      'fa-star-half-alt': star > product.averageRating! && star <= product.averageRating! + 0.5, 
+                      'fa-star-o': star > product.averageRating! + 0.5}">
+        </i>
+        <span class="rating-value">{{product.averageRating?.toFixed(1)}}</span>
+      </div>
+      <span class="reviews-count" *ngIf="product.reviewCount">{{product.reviewCount}} Reviews</span>
+    </div>
+
     <div class="return-policy">
       <div class="policy-item">
         <i class="fas fa-exchange-alt"></i>
@@ -100,116 +114,137 @@
 </ng-template>
 
 <!-- Customer Reviews Section -->
-<div class="reviews-container">
+<div class="reviews-container" *ngIf="!loading && product">
   <div class="reviews-header">
     <h2>Customer Reviews</h2>
-    <div class="overall-rating">
-      <div class="rating-number">4.9</div>
+    <div class="overall-rating" *ngIf="product.averageRating !== undefined">
+      <div class="rating-number">{{product.averageRating?.toFixed(1)}}</div>
       <div class="stars">
-        <i class="fas fa-star"></i>
-        <i class="fas fa-star"></i>
-        <i class="fas fa-star"></i>
-        <i class="fas fa-star"></i>
-        <i class="fas fa-star-half-alt"></i>
+        <i *ngFor="let star of [1, 2, 3, 4, 5]" 
+           class="fa" 
+           [ngClass]="{'fa-star': star <= product.averageRating!, 
+                      'fa-star-half-alt': star > product.averageRating! && star <= product.averageRating! + 0.5, 
+                      'fa-star-o': star > product.averageRating! + 0.5}">
+        </i>
       </div>
-      <div class="total-reviews">74 reviews</div>
+      <div class="total-reviews">{{product.reviewCount || 0}} reviews</div>
+    </div>
+    <button class="write-review-btn" (click)="showReviewForm = !showReviewForm">
+      <i class="fas fa-pencil-alt"></i> Write a Review
+    </button>
+  </div>
+
+  <!-- Review Form -->
+  <div class="review-form-container" *ngIf="showReviewForm">
+    <div class="review-form">
+      <h3>Write Your Review</h3>
+      
+      <div class="form-group">
+        <label>Rating</label>
+        <div class="rating-selector">
+          <i *ngFor="let star of [1, 2, 3, 4, 5]"
+             class="fa"
+             [ngClass]="{'fa-star': star <= newReview.rating!, 'fa-star-o': star > newReview.rating!}"
+             (click)="newReview.rating = star"></i>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Review</label>
+        <textarea
+          rows="4"
+          placeholder="Share your experience with this product..."
+          [(ngModel)]="newReview.comment"
+        ></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label>Add Photos (optional)</label>
+        <div class="photo-upload">
+          <label class="upload-btn">
+            <i class="fas fa-camera"></i> Upload Photos
+            <input type="file" accept="image/*" multiple (change)="handleImageUpload($event)" style="display: none;">
+          </label>
+          
+          <div class="uploaded-images" *ngIf="newReview.reviewImages && newReview.reviewImages.length > 0">
+            <div class="uploaded-image" *ngFor="let image of newReview.reviewImages; let i = index">
+              <img [src]="image" alt="Uploaded image">
+              <button class="remove-image" (click)="removeUploadedImage(i)">&times;</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="error-message" *ngIf="reviewError">{{reviewError}}</div>
+      
+      <div class="form-actions">
+        <button class="cancel-btn" (click)="showReviewForm = false">Cancel</button>
+        <button class="submit-btn" [disabled]="reviewSubmitting || !newReview.comment" (click)="submitReview()">
+          <span *ngIf="!reviewSubmitting">Submit Review</span>
+          <span *ngIf="reviewSubmitting">Submitting...</span>
+        </button>
+      </div>
     </div>
   </div>
 
   <div class="reviews-filter">
     <div class="filter-heading">Filter Reviews</div>
     <div class="rating-filter">
-      <button class="filter-btn active">All</button>
-      <button class="filter-btn">5 Stars</button>
-      <button class="filter-btn">4 Stars</button>
-      <button class="filter-btn">3 Stars</button>
-      <button class="filter-btn">2 Stars</button>
-      <button class="filter-btn">1 Star</button>
+      <button class="filter-btn" [class.active]="selectedRatingFilter === null" (click)="filterReviewsByRating(null)">All ({{reviews.length}})</button>
+      <button class="filter-btn" [class.active]="selectedRatingFilter === 5" (click)="filterReviewsByRating(5)">5 Stars ({{ratingDistribution[5]}})</button>
+      <button class="filter-btn" [class.active]="selectedRatingFilter === 4" (click)="filterReviewsByRating(4)">4 Stars ({{ratingDistribution[4]}})</button>
+      <button class="filter-btn" [class.active]="selectedRatingFilter === 3" (click)="filterReviewsByRating(3)">3 Stars ({{ratingDistribution[3]}})</button>
+      <button class="filter-btn" [class.active]="selectedRatingFilter === 2" (click)="filterReviewsByRating(2)">2 Stars ({{ratingDistribution[2]}})</button>
+      <button class="filter-btn" [class.active]="selectedRatingFilter === 1" (click)="filterReviewsByRating(1)">1 Star ({{ratingDistribution[1]}})</button>
     </div>
   </div>
 
-  <div class="reviews-list">
-    <!-- Review 1 -->
-    <div class="review-item">
+  <!-- Loading reviews indicator -->
+  <div class="loading-reviews" *ngIf="loadingReviews">
+    <div class="spinner"></div>
+    <p>Loading reviews...</p>
+  </div>
+
+  <!-- No reviews message -->
+  <div class="no-reviews" *ngIf="!loadingReviews && filteredReviews.length === 0">
+    <i class="fas fa-comment-slash"></i>
+    <p>No reviews yet. Be the first to review this product!</p>
+  </div>
+
+  <div class="reviews-list" *ngIf="!loadingReviews && filteredReviews.length > 0">
+    <!-- Review Item -->
+    <div class="review-item" *ngFor="let review of filteredReviews">
       <div class="reviewer-info">
-        <div class="avatar">JD</div>
+        <div class="avatar" [ngStyle]="{'background-image': review.reviewerProfilePicture ? 'url(' + review.reviewerProfilePicture + ')' : 'none'}">
+          <span *ngIf="!review.reviewerProfilePicture">{{review.reviewerName?.charAt(0) || 'U'}}</span>
+        </div>
         <div class="name-date">
-          <div class="reviewer-name">John Doe</div>
-          <div class="review-date">April 12, 2023</div>
+          <div class="reviewer-name">{{review.reviewerName || 'Anonymous'}}</div>
+          <div class="review-date">{{formatDate(review.createdAt)}}</div>
         </div>
       </div>
       <div class="review-rating">
         <div class="stars">
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
+          <i *ngFor="let star of [1, 2, 3, 4, 5]" 
+             class="fa" 
+             [ngClass]="{'fa-star': star <= review.rating!, 'fa-star-o': star > review.rating!}"></i>
         </div>
+        <span class="verified-badge" *ngIf="review.isVerified">
+          <i class="fas fa-check-circle"></i> Verified Purchase
+        </span>
       </div>
       <div class="review-content">
-        <p>Great drone for the price! The camera quality is excellent, and it's very easy to fly. Battery life is decent - got about 15 minutes of flight time. The app is a bit buggy but works fine most of the time.</p>
+        <p>{{review.comment}}</p>
       </div>
-      <div class="review-photos">
-        <img src="https://ae01.alicdn.com/kf/S661f3b6c7fa24798b56a726f4ffd0fddp/V8-New-Mini-Drone-4k-profession-HD-1080P-Wide-Angle-Camera-WiFi-FPV-RC-Dron-Height.jpg_Q90.jpg" alt="User photo 1">
-        <img src="https://ae01.alicdn.com/kf/S30f4e0adecdf43efb67e84ec4725de9fa/V8-New-Mini-Drone-4k-profession-HD-1080P-Wide-Angle-Camera-WiFi-FPV-RC-Dron-Height.jpg_Q90.jpg" alt="User photo 2">
+      <div class="review-photos" *ngIf="review.reviewImages && review.reviewImages.length > 0">
+        <img *ngFor="let image of review.reviewImages" [src]="image" [alt]="'User photo'">
       </div>
-    </div>
-
-    <!-- Review 2 -->
-    <div class="review-item">
-      <div class="reviewer-info">
-        <div class="avatar">MS</div>
-        <div class="name-date">
-          <div class="reviewer-name">Marie Smith</div>
-          <div class="review-date">March 28, 2023</div>
-        </div>
-      </div>
-      <div class="review-rating">
-        <div class="stars">
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="far fa-star"></i>
-        </div>
-      </div>
-      <div class="review-content">
-        <p>Bought this for my son and he loves it. It's very durable - has survived multiple crashes already. The controls are intuitive enough for a beginner. My only complaint is the battery life could be better, but for the price, it's fantastic.</p>
-      </div>
-    </div>
-
-    <!-- Review 3 -->
-    <div class="review-item">
-      <div class="reviewer-info">
-        <div class="avatar">RJ</div>
-        <div class="name-date">
-          <div class="reviewer-name">Robert Jones</div>
-          <div class="review-date">February 15, 2023</div>
-        </div>
-      </div>
-      <div class="review-rating">
-        <div class="stars">
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-        </div>
-      </div>
-      <div class="review-content">
-        <p>This is my third drone and by far the best value for money. The 4K camera captures amazing footage, and the flight stability is impressive for such a small drone. Highly recommended for both beginners and experienced users.</p>
-      </div>
-      <div class="review-photos">
-        <img src="https://ae01.alicdn.com/kf/Seccb32238fc84517baf316cc1fdf13c8M/V8-New-Mini-Drone-4k-profession-HD-1080P-Wide-Angle-Camera-WiFi-FPV-RC-Dron-Height.jpg_Q90.jpg" alt="User photo 3">
+      <div class="review-actions">
+        <button class="like-btn" (click)="likeReview(review.id!, $event)">
+          <i class="far fa-thumbs-up"></i>
+          <span>Helpful ({{review.likesCount || 0}})</span>
+        </button>
       </div>
     </div>
   </div>
-
-  <div class="reviews-pagination">
-    <button class="pagination-btn active">1</button>
-    <button class="pagination-btn">2</button>
-    <button class="pagination-btn">3</button>
-    <button class="pagination-btn">Next</button>
-  </div>
-</div> 
+</div>

@@ -1,13 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../../../../core/services/product.service';
-import { Product, ProductType } from '../../../../../core/models/product.model';
+import { 
+  Product, 
+  ProductType, 
+  ProductReview, 
+  CreateProductReviewDto 
+} from '../../../../../core/models/product.model';
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.css']
 })
@@ -15,10 +21,27 @@ export class ProductDetailComponent implements OnInit {
   selectedImageIndex = 0;
   productId: string | null = null;
   product: Product | null = null;
+  reviews: ProductReview[] = [];
   loading = true;
+  loadingReviews = false;
   error = false;
   quantity = 1;
   ProductType = ProductType; // Make enum available to template
+  
+  // New fields for review functionality
+  newReview: CreateProductReviewDto = {
+    rating: 5,
+    comment: '',
+    reviewImages: []
+  };
+  showReviewForm = false;
+  reviewSubmitting = false;
+  reviewError = '';
+  ratingDistribution: { [key: number]: number } = {
+    1: 0, 2: 0, 3: 0, 4: 0, 5: 0
+  };
+  selectedRatingFilter: number | null = null;
+  filteredReviews: ProductReview[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -43,6 +66,9 @@ export class ProductDetailComponent implements OnInit {
         this.product = product;
         this.loading = false;
         console.log('Product details loaded:', product);
+        
+        // Load reviews after product is loaded
+        this.loadProductReviews(id);
       },
       error: (err: any) => {
         console.error('Error loading product details:', err);
@@ -50,6 +76,129 @@ export class ProductDetailComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  loadProductReviews(productId: string): void {
+    this.loadingReviews = true;
+    
+    this.productService.getProductReviews(productId).subscribe({
+      next: (reviews) => {
+        this.reviews = reviews;
+        this.filteredReviews = [...reviews];
+        this.loadingReviews = false;
+        
+        // Calculate rating distribution
+        this.calculateRatingDistribution();
+        
+        console.log('Product reviews loaded:', reviews);
+      },
+      error: (err) => {
+        console.error('Error loading product reviews:', err);
+        this.loadingReviews = false;
+      }
+    });
+  }
+
+  calculateRatingDistribution(): void {
+    // Reset distribution
+    this.ratingDistribution = {
+      1: 0, 2: 0, 3: 0, 4: 0, 5: 0
+    };
+    
+    // Count reviews by rating
+    this.reviews.forEach(review => {
+      if (review.rating && review.rating >= 1 && review.rating <= 5) {
+        this.ratingDistribution[review.rating]++;
+      }
+    });
+  }
+
+  filterReviewsByRating(rating: number | null): void {
+    this.selectedRatingFilter = rating;
+    
+    if (rating === null) {
+      this.filteredReviews = [...this.reviews];
+    } else {
+      this.filteredReviews = this.reviews.filter(review => review.rating === rating);
+    }
+  }
+
+  submitReview(): void {
+    if (!this.productId) return;
+    
+    this.reviewSubmitting = true;
+    this.reviewError = '';
+    
+    this.productService.addProductReview(this.productId, this.newReview).subscribe({
+      next: (review) => {
+        console.log('Review submitted:', review);
+        this.reviewSubmitting = false;
+        this.showReviewForm = false;
+        
+        // Add the new review to the list and recalculate stats
+        this.reviews.unshift(review);
+        this.filteredReviews = [...this.reviews];
+        this.calculateRatingDistribution();
+        
+        // Reset the form
+        this.newReview = {
+          rating: 5,
+          comment: '',
+          reviewImages: []
+        };
+      },
+      error: (err) => {
+        console.error('Error submitting review:', err);
+        this.reviewSubmitting = false;
+        this.reviewError = 'Failed to submit review. Please try again.';
+      }
+    });
+  }
+
+  likeReview(reviewId: string, event: Event): void {
+    event.stopPropagation();
+    
+    if (!this.productId) return;
+    
+    this.productService.likeProductReview(this.productId, reviewId).subscribe({
+      next: (newLikeCount) => {
+        // Update the like count in the reviews list
+        const review = this.reviews.find(r => r.id === reviewId);
+        if (review) {
+          review.likesCount = newLikeCount;
+        }
+      },
+      error: (err) => {
+        console.error('Error liking review:', err);
+      }
+    });
+  }
+
+  handleImageUpload(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      for (let i = 0; i < input.files.length; i++) {
+        const file = input.files[i];
+        const reader = new FileReader();
+        
+        reader.onload = () => {
+          const base64String = reader.result as string;
+          if (this.newReview.reviewImages) {
+            this.newReview.reviewImages.push(base64String);
+          } else {
+            this.newReview.reviewImages = [base64String];
+          }
+        };
+        
+        reader.readAsDataURL(file);
+      }
+    }
+  }
+
+  removeUploadedImage(index: number): void {
+    if (this.newReview.reviewImages) {
+      this.newReview.reviewImages.splice(index, 1);
+    }
   }
 
   getProductTypeName(productType: ProductType): string {
@@ -97,5 +246,16 @@ export class ProductDetailComponent implements OnInit {
       // TODO: Implement checkout functionality
       alert('Proceeding to checkout...');
     }
+  }
+
+  // Helper method to format date
+  formatDate(date: Date | string | undefined): string {
+    if (!date) return '';
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return dateObj.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
   }
 } 
