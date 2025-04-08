@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { SellerNavbarComponent } from '../seller-navbar/seller-navbar.component';
-
+////htygfnfgnfgng
 @Component({
   selector: 'app-seller-layout',
   standalone: true,

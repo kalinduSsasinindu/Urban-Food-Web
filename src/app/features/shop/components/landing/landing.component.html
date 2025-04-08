@@ -1,8 +1,4 @@
 <div class="landing-container">
-  <div class="landing-header">
-    <h1>Discover Delicious Foods</h1>
-    <p>Order from the best local restaurants</p>
-  </div>
   <div class="products-grid">
     @for (product of products; track product.id) {
       <app-product-card [product]="product"></app-product-card>

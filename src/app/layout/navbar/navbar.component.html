@@ -9,18 +9,40 @@
       
       <!-- Categories Nav Row -->
       <div class="categories-nav-row">
-        <!-- Categories dropdown below the logo -->
-        <div class="categories-dropdown" [class.active]="isCategoriesOpen">
-          <button class="categories-toggle" (click)="toggleCategories($event)">
-            <i class="fas fa-bars"></i>
-            All Categories
+       
+        
+        <!-- Product Type Selector -->
+        <div class="categories-dropdown" [class.active]="isProductTypeOpen">
+          <button class="categories-toggle" (click)="toggleProductTypes($event)">
+            <i class="fas fa-apple-alt"></i>
+            {{ selectedProductTypeLabel || 'All Products' }}
             <i class="fas fa-chevron-down"></i>
           </button>
           
-          <div class="categories-menu" *ngIf="isCategoriesOpen">
-            <a [routerLink]="category.route" class="category-item" *ngFor="let category of categories">
-              <i class="fas" [ngClass]="category.icon"></i>
-              <span>{{ category.displayName }}</span>
+          <div class="categories-menu" *ngIf="isProductTypeOpen">
+            <a (click)="selectProductType(undefined, $event)" class="category-item">
+              <i class="fas fa-border-all"></i>
+              <span>All Products</span>
+            </a>
+            <a (click)="selectProductType(ProductType.Fruit, $event)" class="category-item">
+              <i class="fas fa-apple-alt"></i>
+              <span>Fruits</span>
+            </a>
+            <a (click)="selectProductType(ProductType.Vegetable, $event)" class="category-item">
+              <i class="fas fa-carrot"></i>
+              <span>Vegetables</span>
+            </a>
+            <a (click)="selectProductType(ProductType.DairyProduct, $event)" class="category-item">
+              <i class="fas fa-cheese"></i>
+              <span>Dairy Products</span>
+            </a>
+            <a (click)="selectProductType(ProductType.BakedGood, $event)" class="category-item">
+              <i class="fas fa-bread-slice"></i>
+              <span>Baked Goods</span>
+            </a>
+            <a (click)="selectProductType(ProductType.HandmadeCraft, $event)" class="category-item">
+              <i class="fas fa-hands"></i>
+              <span>Handmade Crafts</span>
             </a>
           </div>
         </div>

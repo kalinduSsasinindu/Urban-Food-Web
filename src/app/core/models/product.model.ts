@@ -1,9 +1,18 @@
+export enum ProductType {
+  Fruit = 1,
+  Vegetable = 2,
+  DairyProduct = 3,
+  BakedGood = 4,
+  HandmadeCraft = 5
+}
+
 export interface Product {
   id: string;
   title: string;
   description: string;
   images?: string[];
   imgUrls?: string[];
+  productType: ProductType;
   variants: ProductVariant[];
   options: VariantOption[];
   tags?: string[];
