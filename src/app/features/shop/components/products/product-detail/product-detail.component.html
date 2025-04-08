@@ -1,0 +1,81 @@
+<div class="product-detail-container" *ngIf="product && !isLoading">
+  <div class="product-gallery">
+    <div class="main-image">
+      <img [src]="product.imgUrls && product.imgUrls.length > 0 ? product.imgUrls[selectedImageIndex] : 'assets/placeholder-image.jpg'" [alt]="product.title">
+    </div>
+    <div class="thumbnail-carousel" *ngIf="product.imgUrls && product.imgUrls.length > 1">
+      <div 
+        *ngFor="let img of product.imgUrls; let i = index" 
+        class="thumbnail" 
+        [class.active]="selectedImageIndex === i"
+        (click)="selectImage(i)"
+      >
+        <img [src]="img" [alt]="product.title + ' ' + i">
+      </div>
+    </div>
+  </div>
+
+  <div class="product-info">
+    <div class="product-header">
+      <div class="hd-badge">4K ULTRA HD</div>
+      <div class="price-section">
+        <div class="price-container">
+          <span class="current-price">LKR{{ selectedVariant?.price || productInfo?.price | number:'1.2-2' }}</span>
+          <span class="original-price" *ngIf="selectedVariant?.originalPrice || productInfo?.originalPrice">
+            LKR{{ selectedVariant?.originalPrice || productInfo?.originalPrice | number:'1.2-2' }}
+          </span>
+          <span class="discount-badge" *ngIf="selectedVariant?.discountPercentage || productInfo?.discountPercentage">
+            {{ selectedVariant?.discountPercentage || productInfo?.discountPercentage }}% off
+          </span>
+        </div>
+        <div class="tax-info">Tax excluded, add at checkout if applicable : Extra 2% off with coins</div>
+      </div>
+    </div>
+
+    <h1 class="product-title">{{ product.title }}</h1>
+
+    <div class="return-policy">
+      <div class="policy-item">
+        <i class="fas fa-exchange-alt"></i>
+        <span>Return&refund policy</span>
+        <i class="fas fa-chevron-right"></i>
+      </div>
+      <div class="policy-item">
+        <i class="fas fa-shield-alt"></i>
+        <span>Security & Privacy</span>
+        <i class="fas fa-chevron-right"></i>
+      </div>
+    </div>
+
+    <div class="quantity-section">
+      <h3>Quantity</h3>
+      <div class="quantity-control">
+        <button class="quantity-btn" (click)="decreaseQuantity()">-</button>
+        <span class="quantity-value">{{ quantity }}</span>
+        <button class="quantity-btn" (click)="increaseQuantity()">+</button>
+      </div>
+      <div class="max-quantity">Max. 1 pcs/shopper</div>
+    </div>
+
+    <div class="action-buttons">
+      <button class="buy-now-btn" (click)="buyNow()">Buy now</button>
+      <button class="add-to-cart-btn" (click)="addToCart()">Add to cart</button>
+    </div>
+
+    <div class="social-actions">
+      <button class="share-btn">
+        <i class="fas fa-share-alt"></i>
+        <span>Share</span>
+      </button>
+      <button class="wishlist-btn">
+        <i class="far fa-heart"></i>
+        <span>847</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="loading" *ngIf="isLoading">
+  <div class="spinner"></div>
+  <p>Loading product details...</p>
+</div> 
