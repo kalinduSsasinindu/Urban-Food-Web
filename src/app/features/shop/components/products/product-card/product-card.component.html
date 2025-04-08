@@ -1,5 +1,5 @@
 <div class="product-card">
-  <img [src]="product.imgUrl || 'assets/placeholder-image.jpg'" [alt]="product.title" class="product-image">
+  <img [src]="product.imgUrls?.[0] || 'assets/placeholder-image.jpg'" [alt]="product.title" class="product-image">
   <div class="product-info">
     <div class="product-header">
       <h3>{{ product.title }}</h3>
@@ -9,7 +9,7 @@
     </div>
     <p class="description">{{ product.description }}</p>
     <div class="product-footer">
-      <div class="price">${{ product.price.toFixed(2) }}</div>
+      <div class="price">${{ (product.variants[0]?.price || 0).toFixed(2) }}</div>
       <button class="view-btn">View Details</button>
     </div>
   </div>

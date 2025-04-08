@@ -4,7 +4,8 @@ import {
   Product, 
   ProductSearchResponse, 
   ProductVariant, 
-  VariantOption
+  VariantOption,
+  ProductType
 } from '../models/product.model';
 import { Tag } from '../models/tag.model';
 
@@ -70,6 +71,7 @@ export class MockProductService {
     imgUrls: [p.imgUrl],
     images: [p.imgUrl],
     tags: p.tags,
+    productType: ProductType.Fruit,
     variants: [
       {
         variantId: 1,

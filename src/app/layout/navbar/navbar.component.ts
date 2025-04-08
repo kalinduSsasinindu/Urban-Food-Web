@@ -5,9 +5,10 @@ import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/auth';
 import { UserService } from '../../core/services';
-import { StoreDetails, User } from '../../core/models';
+import { ProductType, StoreDetails, User } from '../../core/models';
 import { StoreDetailsModalComponent } from '../../shared/components/store-details-modal/store-details-modal.component';
 import { CATEGORIES, Category } from '../../core/models/category.enum';
+import { ProductService } from '../../core/services/product.service';
 
 @Component({
   selector: 'app-navbar',
@@ -34,13 +35,18 @@ export class NavbarComponent implements OnInit {
   isUserDropdownActive: boolean = false;
   isLanguageDropdownActive: boolean = false;
   isCategoriesOpen: boolean = false;
+  isProductTypeOpen: boolean = false;
+  selectedProductTypeLabel: string = '';
 
   categories: Category[] = CATEGORIES;
+  ProductType = ProductType;
+  selectedProductType: ProductType | undefined;
 
   constructor(
     private authService: AuthService,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private productService: ProductService
   ) {}
 
   ngOnInit() {
@@ -457,5 +463,85 @@ export class NavbarComponent implements OnInit {
     // Close menu when clicking outside
     this.isCategoriesOpen = false;
     document.removeEventListener('click', this.closeCategoriesOnClick);
+  }
+
+  onProductTypeChange(event: Event) {
+    const select = event.target as HTMLSelectElement;
+    this.selectedProductType = select.value ? +select.value : undefined;
+    console.log('Selected product type:', this.selectedProductType);
+    
+    // Navigate to the shop page with the selected product type
+    if (this.selectedProductType) {
+      this.router.navigate(['/shop'], { 
+        queryParams: { productType: this.selectedProductType } 
+      });
+    } else {
+      this.router.navigate(['/shop']);
+    }
+  }
+
+  toggleProductTypes(event: Event) {
+    event.stopPropagation();
+    this.isProductTypeOpen = !this.isProductTypeOpen;
+    
+    // Close categories dropdown if open
+    if (this.isProductTypeOpen) {
+      this.isCategoriesOpen = false;
+    }
+    
+    // Add click outside listener
+    if (this.isProductTypeOpen) {
+      setTimeout(() => {
+        document.addEventListener('click', this.closeProductTypeDropdown);
+      }, 0);
+    }
+  }
+  
+  closeProductTypeDropdown = () => {
+    this.isProductTypeOpen = false;
+    document.removeEventListener('click', this.closeProductTypeDropdown);
+  }
+  
+  selectProductType(productType: ProductType | undefined, event: Event) {
+    event.stopPropagation();
+    this.selectedProductType = productType;
+    
+    // Set the label based on the selected product type
+    if (productType === undefined) {
+      this.selectedProductTypeLabel = 'All Products';
+    } else {
+      switch(productType) {
+        case ProductType.Fruit:
+          this.selectedProductTypeLabel = 'Fruits';
+          break;
+        case ProductType.Vegetable:
+          this.selectedProductTypeLabel = 'Vegetables';
+          break;
+        case ProductType.DairyProduct:
+          this.selectedProductTypeLabel = 'Dairy Products';
+          break;
+        case ProductType.BakedGood:
+          this.selectedProductTypeLabel = 'Baked Goods';
+          break;
+        case ProductType.HandmadeCraft:
+          this.selectedProductTypeLabel = 'Handmade Crafts';
+          break;
+      }
+    }
+    
+    // Close the dropdown
+    this.isProductTypeOpen = false;
+    document.removeEventListener('click', this.closeProductTypeDropdown);
+    
+    // Navigate to the shop page with the selected product type
+    if (this.selectedProductType) {
+      this.router.navigate(['/shop'], { 
+        queryParams: { productType: this.selectedProductType } 
+      });
+    } else {
+      this.router.navigate(['/shop']);
+    }
+    
+    console.log('Selected product type:', this.selectedProductType);
   }
 } 

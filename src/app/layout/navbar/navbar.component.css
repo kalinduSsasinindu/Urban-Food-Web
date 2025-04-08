@@ -1193,3 +1193,32 @@ body.modal-open {
 .quick-nav-item.following-link i {
   color: #ff4747;
 }
+
+.product-type-selector {
+  margin: 0 15px;
+  display: inline-block;
+}
+
+.product-type-selector select {
+  padding: 8px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background-color: white;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  min-width: 160px;
+  height: 38px;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.product-type-selector select:hover {
+  border-color: #007bff;
+}
+
+.product-type-selector select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}

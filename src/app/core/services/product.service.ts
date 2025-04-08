@@ -6,7 +6,8 @@ import {
   ProductSearchResponse, 
   ProductVariant, 
   VariantOption, 
-  MediaServiceDto 
+  MediaServiceDto, 
+  ProductType
 } from '../models/product.model';
 import { ApiService } from './api.service';
 import { environment } from '../../utils/config';
@@ -172,5 +173,14 @@ export class ProductService {
 
   addTagToProduct(productId: string, tags: string[]): Observable<any> {
     return this.apiService.put(`${this.apiUrl}/${productId}/tags`, { tags });
+  }
+
+  getProductsByProductType(productType?: ProductType): Observable<Product[]> {
+    let url = `${this.apiUrl}/customergetproductsbyproducttype`;
+    const params: { [key: string]: string } = {};
+    if (productType !== undefined) {
+      params['productType'] = productType.toString();
+    }
+    return this.apiService.get<Product[]>(url, params);
   }
 } 

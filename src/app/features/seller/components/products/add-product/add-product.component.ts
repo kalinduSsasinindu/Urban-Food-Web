@@ -17,7 +17,7 @@ import {
 import { ProductService } from '../../../../../core/services/product.service';
 import { NotifierService } from '../../../../../core/services/notifier.service';
 import { NotificationType } from '../../../../../core/models/enums/notification-type';
-import { Product, ProductVariant, VariantOption } from '../../../../../core/models/product.model';
+import { Product, ProductType, ProductVariant, VariantOption } from '../../../../../core/models/product.model';
 import { Observable, of } from 'rxjs';
 import { map, startWith, debounceTime, switchMap } from 'rxjs/operators';
 
@@ -56,6 +56,8 @@ export class AddProductComponent implements OnInit {
   tagInputValue = '';
   initialTags: string[] = [];
   
+  ProductType = ProductType; // Make ProductType enum available in template
+  
   @ViewChild('fileInput') fileInput!: ElementRef;
 
   constructor(
@@ -91,7 +93,8 @@ export class AddProductComponent implements OnInit {
       title: ['', [Validators.required, Validators.minLength(1)]],
       description: [''],
       images: this.fb.array([], [Validators.required, Validators.minLength(1)]),
-      options: this.fb.array([], [this.uniqueOptionValuesValidator()])
+      options: this.fb.array([], [this.uniqueOptionValuesValidator()]),
+      productType: [ProductType.Fruit, Validators.required]
     });
   }
   
@@ -393,7 +396,8 @@ export class AddProductComponent implements OnInit {
         // Set form values
         this.productForm.patchValue({
           title: product.title,
-          description: product.description
+          description: product.description,
+          productType: product.productType
         });
 
         // Load images
@@ -741,7 +745,8 @@ export class AddProductComponent implements OnInit {
         variants: this.generatedVariants,
         options: this.optionsFormArray.length > 0 ? this.productForm.get('options')!.value : [],
         imgUrls: imgUrls,
-        tags: this.tags
+        tags: this.tags,
+        productType: this.productForm.get('productType')!.value || ProductType.Fruit
       };
 
       if (this.isEditMode) {
