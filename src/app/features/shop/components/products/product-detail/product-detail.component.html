@@ -1,16 +1,16 @@
-<div class="product-detail-container" *ngIf="product && !isLoading">
+<div class="product-detail-container">
   <div class="product-gallery">
     <div class="main-image">
-      <img [src]="product.imgUrls && product.imgUrls.length > 0 ? product.imgUrls[selectedImageIndex] : 'assets/placeholder-image.jpg'" [alt]="product.title">
+      <img [src]="productImages[selectedImageIndex]" alt="Drone">
     </div>
-    <div class="thumbnail-carousel" *ngIf="product.imgUrls && product.imgUrls.length > 1">
+    <div class="thumbnail-carousel">
       <div 
-        *ngFor="let img of product.imgUrls; let i = index" 
+        *ngFor="let img of productImages; let i = index" 
         class="thumbnail" 
         [class.active]="selectedImageIndex === i"
         (click)="selectImage(i)"
       >
-        <img [src]="img" [alt]="product.title + ' ' + i">
+        <img [src]="img" [alt]="'Drone thumbnail ' + (i+1)">
       </div>
     </div>
   </div>
@@ -20,19 +20,15 @@
       <div class="hd-badge">4K ULTRA HD</div>
       <div class="price-section">
         <div class="price-container">
-          <span class="current-price">LKR{{ selectedVariant?.price || productInfo?.price | number:'1.2-2' }}</span>
-          <span class="original-price" *ngIf="selectedVariant?.originalPrice || productInfo?.originalPrice">
-            LKR{{ selectedVariant?.originalPrice || productInfo?.originalPrice | number:'1.2-2' }}
-          </span>
-          <span class="discount-badge" *ngIf="selectedVariant?.discountPercentage || productInfo?.discountPercentage">
-            {{ selectedVariant?.discountPercentage || productInfo?.discountPercentage }}% off
-          </span>
+          <span class="current-price">LKR6,619.85</span>
+          <span class="original-price">LKR13,791.35</span>
+          <span class="discount-badge">52% off</span>
         </div>
         <div class="tax-info">Tax excluded, add at checkout if applicable : Extra 2% off with coins</div>
       </div>
     </div>
 
-    <h1 class="product-title">{{ product.title }}</h1>
+    <h1 class="product-title">V8 New Mini Drone 4k profession HD 1080P Wide Angle Camera WiFi FPV RC Dron Height Keep Drones Helicopter Kids Toys 4DRC</h1>
 
     <div class="return-policy">
       <div class="policy-item">
@@ -47,11 +43,42 @@
       </div>
     </div>
 
+    <!-- Sold By Section -->
+    <div class="sold-by-section">
+      <h3>Sold By</h3>
+      <div class="store-info">
+        <div class="store-avatar">
+          <img src="https://ae01.alicdn.com/kf/S7ae23ee350eb46b9a3bbcd2a0ddc98aeU/251x251.png" alt="Store Logo">
+        </div>
+        <div class="store-details">
+          <div class="store-name">Tech Gadgets Official Store</div>
+          <div class="store-stats">
+            <div class="stat-item">
+              <div class="label">Positive Feedback</div>
+              <div class="value">97.3%</div>
+            </div>
+            <div class="stat-item">
+              <div class="label">Ship on time</div>
+              <div class="value">99%</div>
+            </div>
+            <div class="stat-item">
+              <div class="label">Response rate</div>
+              <div class="value">98%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="store-buttons">
+        <button class="visit-store-btn">Visit Store</button>
+        <button class="follow-store-btn">Follow</button>
+      </div>
+    </div>
+
     <div class="quantity-section">
       <h3>Quantity</h3>
       <div class="quantity-control">
         <button class="quantity-btn" (click)="decreaseQuantity()">-</button>
-        <span class="quantity-value">{{ quantity }}</span>
+        <span class="quantity-value">1</span>
         <button class="quantity-btn" (click)="increaseQuantity()">+</button>
       </div>
       <div class="max-quantity">Max. 1 pcs/shopper</div>
@@ -75,7 +102,117 @@
   </div>
 </div>
 
-<div class="loading" *ngIf="isLoading">
-  <div class="spinner"></div>
-  <p>Loading product details...</p>
+<!-- Customer Reviews Section -->
+<div class="reviews-container">
+  <div class="reviews-header">
+    <h2>Customer Reviews</h2>
+    <div class="overall-rating">
+      <div class="rating-number">4.9</div>
+      <div class="stars">
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star-half-alt"></i>
+      </div>
+      <div class="total-reviews">74 reviews</div>
+    </div>
+  </div>
+
+  <div class="reviews-filter">
+    <div class="filter-heading">Filter Reviews</div>
+    <div class="rating-filter">
+      <button class="filter-btn active">All</button>
+      <button class="filter-btn">5 Stars</button>
+      <button class="filter-btn">4 Stars</button>
+      <button class="filter-btn">3 Stars</button>
+      <button class="filter-btn">2 Stars</button>
+      <button class="filter-btn">1 Star</button>
+    </div>
+  </div>
+
+  <div class="reviews-list">
+    <!-- Review 1 -->
+    <div class="review-item">
+      <div class="reviewer-info">
+        <div class="avatar">JD</div>
+        <div class="name-date">
+          <div class="reviewer-name">John Doe</div>
+          <div class="review-date">April 12, 2023</div>
+        </div>
+      </div>
+      <div class="review-rating">
+        <div class="stars">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+        </div>
+      </div>
+      <div class="review-content">
+        <p>Great drone for the price! The camera quality is excellent, and it's very easy to fly. Battery life is decent - got about 15 minutes of flight time. The app is a bit buggy but works fine most of the time.</p>
+      </div>
+      <div class="review-photos">
+        <img src="https://ae01.alicdn.com/kf/S661f3b6c7fa24798b56a726f4ffd0fddp/V8-New-Mini-Drone-4k-profession-HD-1080P-Wide-Angle-Camera-WiFi-FPV-RC-Dron-Height.jpg_Q90.jpg" alt="User photo 1">
+        <img src="https://ae01.alicdn.com/kf/S30f4e0adecdf43efb67e84ec4725de9fa/V8-New-Mini-Drone-4k-profession-HD-1080P-Wide-Angle-Camera-WiFi-FPV-RC-Dron-Height.jpg_Q90.jpg" alt="User photo 2">
+      </div>
+    </div>
+
+    <!-- Review 2 -->
+    <div class="review-item">
+      <div class="reviewer-info">
+        <div class="avatar">MS</div>
+        <div class="name-date">
+          <div class="reviewer-name">Marie Smith</div>
+          <div class="review-date">March 28, 2023</div>
+        </div>
+      </div>
+      <div class="review-rating">
+        <div class="stars">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="far fa-star"></i>
+        </div>
+      </div>
+      <div class="review-content">
+        <p>Bought this for my son and he loves it. It's very durable - has survived multiple crashes already. The controls are intuitive enough for a beginner. My only complaint is the battery life could be better, but for the price, it's fantastic.</p>
+      </div>
+    </div>
+
+    <!-- Review 3 -->
+    <div class="review-item">
+      <div class="reviewer-info">
+        <div class="avatar">RJ</div>
+        <div class="name-date">
+          <div class="reviewer-name">Robert Jones</div>
+          <div class="review-date">February 15, 2023</div>
+        </div>
+      </div>
+      <div class="review-rating">
+        <div class="stars">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+        </div>
+      </div>
+      <div class="review-content">
+        <p>This is my third drone and by far the best value for money. The 4K camera captures amazing footage, and the flight stability is impressive for such a small drone. Highly recommended for both beginners and experienced users.</p>
+      </div>
+      <div class="review-photos">
+        <img src="https://ae01.alicdn.com/kf/Seccb32238fc84517baf316cc1fdf13c8M/V8-New-Mini-Drone-4k-profession-HD-1080P-Wide-Angle-Camera-WiFi-FPV-RC-Dron-Height.jpg_Q90.jpg" alt="User photo 3">
+      </div>
+    </div>
+  </div>
+
+  <div class="reviews-pagination">
+    <button class="pagination-btn active">1</button>
+    <button class="pagination-btn">2</button>
+    <button class="pagination-btn">3</button>
+    <button class="pagination-btn">Next</button>
+  </div>
 </div> 

@@ -9,6 +9,7 @@ import { SignupComponent } from './features/auth/components/signup/signup.compon
 import { SellerLayoutComponent } from './layout/seller-layout/seller-layout.component';
 import { SellerProfileLayoutComponent } from './layout/seller-profile-layout/seller-profile-layout.component';
 import { CustomerProfileLayoutComponent } from './layout/customer-profile-layout/customer-profile-layout.component';
+import { ProductDetailComponent } from './features/shop/components/products/product-detail/product-detail.component';
 
 export const routes: Routes = [
   { 
@@ -27,6 +28,10 @@ export const routes: Routes = [
   {
     path: 'signup',
     component: SignupComponent
+  },
+  {
+    path: 'shop/product/:id',
+    component: ProductDetailComponent
   },
   {
     path: 'seller',

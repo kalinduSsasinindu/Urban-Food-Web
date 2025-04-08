@@ -30,8 +30,8 @@
 }
 
 .main-image img {
-  max-width: 100%;
-  max-height: 100%;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
 }
 
@@ -39,6 +39,7 @@
   display: flex;
   gap: 10px;
   overflow-x: auto;
+  margin-bottom: 20px;
 }
 
 .thumbnail {
@@ -59,9 +60,9 @@
 }
 
 .thumbnail img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .product-info {
@@ -113,7 +114,7 @@
 
 .discount-badge {
   font-size: 1rem;
-  color: #e63946;
+  color: #ff4d4f;
   font-weight: 600;
 }
 
@@ -227,6 +228,7 @@
 
 .return-policy {
   padding: 16px 0;
+  border-top: 1px solid #eee;
   border-bottom: 1px solid #eee;
   margin-bottom: 16px;
 }
@@ -234,20 +236,14 @@
 .policy-item {
   display: flex;
   align-items: center;
-  margin-bottom: 12px;
-  color: #333;
+  justify-content: space-between;
+  padding: 8px 0;
+  color: #444;
 }
 
 .policy-item i:first-child {
-  margin-right: 8px;
-  color: #777;
-  width: 16px;
-}
-
-.policy-item i:last-child {
-  margin-left: auto;
-  font-size: 0.8rem;
-  color: #999;
+  margin-right: 12px;
+  color: #666;
 }
 
 .color-section {
@@ -308,9 +304,9 @@
 
 .quantity-section h3 {
   font-size: 1rem;
-  color: #333;
-  font-weight: normal;
+  font-weight: 500;
   margin-bottom: 12px;
+  color: #333;
 }
 
 .quantity-control {
@@ -320,80 +316,95 @@
 }
 
 .quantity-btn {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border: 1px solid #ddd;
-  background: #fff;
+  background-color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
   font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.quantity-btn:hover {
+  background-color: #f5f5f5;
 }
 
 .quantity-value {
-  width: 40px;
-  text-align: center;
-  font-size: 1rem;
+  width: 50px;
+  height: 36px;
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
-  height: 32px;
-  line-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
 }
 
 .max-quantity {
-  font-size: 0.85rem;
-  color: #777;
+  font-size: 0.9rem;
+  color: #888;
 }
 
 .action-buttons {
   display: flex;
-  gap: 16px;
-  margin-bottom: 24px;
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
 .buy-now-btn, .add-to-cart-btn {
   flex: 1;
-  padding: 12px 0;
-  border: none;
+  padding: 12px 24px;
   border-radius: 4px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 500;
   cursor: pointer;
-  font-size: 1rem;
-  transition: opacity 0.2s;
+  transition: all 0.2s;
+  border: none;
 }
 
 .buy-now-btn {
-  background-color: #e63946;
-  color: white;
+  background-color: #d30000;
+  color: #fff;
+}
+
+.buy-now-btn:hover {
+  background-color: #b30000;
 }
 
 .add-to-cart-btn {
   background-color: #fff;
-  color: #e63946;
-  border: 1px solid #e63946;
+  color: #d30000;
+  border: 1px solid #d30000;
 }
 
-.buy-now-btn:hover, .add-to-cart-btn:hover {
-  opacity: 0.9;
+.add-to-cart-btn:hover {
+  background-color: #fff0f0;
 }
 
 .social-actions {
   display: flex;
-  gap: 16px;
+  gap: 12px;
 }
 
 .share-btn, .wishlist-btn {
   display: flex;
   align-items: center;
-  background: none;
-  border: none;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  border-radius: 4px;
+  font-size: 14px;
   cursor: pointer;
-  color: #666;
+  transition: all 0.2s;
 }
 
-.share-btn i, .wishlist-btn i {
-  margin-right: 8px;
+.share-btn:hover, .wishlist-btn:hover {
+  background-color: #f5f5f5;
 }
 
 .loading {
@@ -435,4 +446,319 @@
   .main-image {
     height: 300px;
   }
+}
+
+/* Customer Reviews CSS */
+.reviews-container {
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 24px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.reviews-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 20px;
+}
+
+.reviews-header h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.overall-rating {
+  display: flex;
+  align-items: center;
+}
+
+.rating-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #333;
+  margin-right: 12px;
+}
+
+.stars {
+  display: flex;
+  color: #ffc107;
+  margin-right: 12px;
+}
+
+.stars i {
+  margin-right: 3px;
+}
+
+.total-reviews {
+  color: #777;
+  font-size: 0.9rem;
+}
+
+.reviews-filter {
+  margin-bottom: 24px;
+}
+
+.filter-heading {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #555;
+  margin-bottom: 12px;
+}
+
+.rating-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-btn {
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  border-radius: 16px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-btn.active {
+  background-color: #f2f2f2;
+  border-color: #bbb;
+  font-weight: 500;
+}
+
+.filter-btn:hover {
+  background-color: #f5f5f5;
+}
+
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.review-item {
+  padding: 16px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.reviewer-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #e1e1e1;
+  color: #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  margin-right: 12px;
+}
+
+.name-date {
+  display: flex;
+  flex-direction: column;
+}
+
+.reviewer-name {
+  font-weight: 500;
+  color: #333;
+}
+
+.review-date {
+  font-size: 0.8rem;
+  color: #777;
+}
+
+.review-rating {
+  margin-bottom: 8px;
+}
+
+.review-content {
+  margin-bottom: 16px;
+  color: #444;
+  line-height: 1.5;
+}
+
+.review-photos {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.review-photos img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.review-photos img:hover {
+  transform: scale(1.05);
+}
+
+.reviews-pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+  gap: 8px;
+}
+
+.pagination-btn {
+  width: 36px;
+  height: 36px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pagination-btn.active {
+  background-color: #f2f2f2;
+  border-color: #bbb;
+  font-weight: 500;
+}
+
+.pagination-btn:hover {
+  background-color: #f5f5f5;
+}
+
+/* Make Next button wider */
+.pagination-btn:last-child {
+  width: auto;
+  padding: 0 12px;
+}
+
+@media (max-width: 768px) {
+  .reviews-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .overall-rating {
+    margin-top: 12px;
+  }
+  
+  .review-photos img {
+    width: 70px;
+    height: 70px;
+  }
+}
+
+/* Sold By Section CSS */
+.sold-by-section {
+  padding: 16px 0;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 16px;
+}
+
+.sold-by-section h3 {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.store-info {
+  display: flex;
+  margin-bottom: 16px;
+}
+
+.store-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 16px;
+  border: 1px solid #eee;
+}
+
+.store-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.store-details {
+  flex: 1;
+}
+
+.store-name {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.store-stats {
+  display: flex;
+  gap: 16px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-item .label {
+  font-size: 0.8rem;
+  color: #777;
+  margin-bottom: 2px;
+}
+
+.stat-item .value {
+  font-weight: 600;
+  color: #333;
+}
+
+.store-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.visit-store-btn, .follow-store-btn {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.visit-store-btn {
+  background-color: #f5f5f5;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+.visit-store-btn:hover {
+  background-color: #eee;
+}
+
+.follow-store-btn {
+  background-color: #fff;
+  color: #ff4d4f;
+  border: 1px solid #ff4d4f;
+}
+
+.follow-store-btn:hover {
+  background-color: #fff0f0;
 } 

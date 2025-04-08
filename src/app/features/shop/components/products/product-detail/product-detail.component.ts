@@ -1,87 +1,39 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule, DecimalPipe } from '@angular/common';
-import { ActivatedRoute, RouterModule } from '@angular/router';
-import { Product, ProductSearchResponse, ProductVariant } from '../../../../../core/models/product.model';
-import { ProductService } from '../../../../../core/services/product.service';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, DecimalPipe],
+  imports: [CommonModule, RouterModule],
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.css']
 })
-export class ProductDetailComponent implements OnInit {
-  product: Product | null = null;
-  productInfo: ProductSearchResponse | null = null;
-  isLoading = true;
+export class ProductDetailComponent {
   selectedImageIndex = 0;
-  quantity = 1;
-  selectedVariant: ProductVariant | null = null;
-
-  constructor(
-    private route: ActivatedRoute,
-    private productService: ProductService
-  ) {}
-
-  ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      const productId = params.get('id');
-      if (productId) {
-        this.loadProduct(productId);
-      }
-    });
-  }
-
-  loadProduct(id: string): void {
-    this.isLoading = true;
-    this.productService.getProductById(id).subscribe({
-      next: (data) => {
-        this.product = data;
-        this.isLoading = false;
-
-        // Get product search response data to access additional properties
-        this.productService.getProducts().subscribe(products => {
-          this.productInfo = products.find(p => p.id === id) || null;
-        });
-
-        if (data.variants && data.variants.length > 0) {
-          this.selectedVariant = data.variants[0];
-        }
-      },
-      error: (error) => {
-        console.error('Error loading product:', error);
-        this.isLoading = false;
-      }
-    });
-  }
+  productImages = [
+    'https://ae01.alicdn.com/kf/S661f3b6c7fa24798b56a726f4ffd0fddp/V8-New-Mini-Drone-4k-profession-HD-1080P-Wide-Angle-Camera-WiFi-FPV-RC-Dron-Height.jpg_Q90.jpg',
+    'https://ae01.alicdn.com/kf/S30f4e0adecdf43efb67e84ec4725de9fa/V8-New-Mini-Drone-4k-profession-HD-1080P-Wide-Angle-Camera-WiFi-FPV-RC-Dron-Height.jpg_Q90.jpg',
+    'https://ae01.alicdn.com/kf/Seccb32238fc84517baf316cc1fdf13c8M/V8-New-Mini-Drone-4k-profession-HD-1080P-Wide-Angle-Camera-WiFi-FPV-RC-Dron-Height.jpg_Q90.jpg'
+  ];
 
   selectImage(index: number): void {
     this.selectedImageIndex = index;
   }
 
   decreaseQuantity(): void {
-    if (this.quantity > 1) {
-      this.quantity--;
-    }
+    // Functionality for the - button
   }
 
   increaseQuantity(): void {
-    this.quantity++;
+    // Functionality for the + button
   }
 
   addToCart(): void {
-    // TODO: Implement add to cart functionality
-    console.log('Adding to cart:', {
-      product: this.product,
-      variant: this.selectedVariant,
-      quantity: this.quantity
-    });
+    // Add to cart functionality
   }
 
   buyNow(): void {
-    // TODO: Implement buy now functionality
-    this.addToCart();
-    // Navigate to checkout
+    // Buy now functionality
   }
 } 
