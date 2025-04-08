@@ -9,6 +9,7 @@ import { ProductType, StoreDetails, User } from '../../core/models';
 import { StoreDetailsModalComponent } from '../../shared/components/store-details-modal/store-details-modal.component';
 import { CATEGORIES, Category } from '../../core/models/category.enum';
 import { ProductService } from '../../core/services/product.service';
+import { CartService } from '../../core/services/cart.service';
 
 @Component({
   selector: 'app-navbar',
@@ -46,7 +47,8 @@ export class NavbarComponent implements OnInit {
     private authService: AuthService,
     private userService: UserService,
     private router: Router,
-    private productService: ProductService
+    private productService: ProductService,
+    private cartService: CartService
   ) {}
 
   ngOnInit() {
@@ -70,9 +72,9 @@ export class NavbarComponent implements OnInit {
   }
 
   private loadCartItemCount() {
-    // TODO: Implement loading cart item count from service
-    // For now, we'll use a dummy value
-    this.cartItemCount = 3;
+    this.cartService.getCartItemCount().subscribe(count => {
+      this.cartItemCount = count;
+    });
   }
 
   get isLoggedIn(): boolean {

@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, ActivatedRoute } from '@angular/router';
+import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../../../../core/services/product.service';
+import { CartService } from '../../../../../core/services/cart.service';
 import { 
   Product, 
   ProductType, 
@@ -45,7 +46,9 @@ export class ProductDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private productService: ProductService
+    private productService: ProductService,
+    private cartService: CartService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -233,19 +236,20 @@ export class ProductDetailComponent implements OnInit {
   }
 
   addToCart(): void {
-    if (this.product) {
+    if (this.product && this.product.variants && this.product.variants.length > 0) {
+      const selectedVariant = this.product.variants[0]; // Default to first variant, can be enhanced to select specific variants
       console.log('Adding to cart:', this.product.id, 'Quantity:', this.quantity);
-      // TODO: Implement actual cart functionality
+      
+      this.cartService.addToCart(this.product, selectedVariant, this.quantity);
+      
+      // Show feedback to the user
       alert(`Added ${this.quantity} item(s) to cart!`);
     }
   }
 
   buyNow(): void {
-    if (this.product) {
-      console.log('Buy now:', this.product.id, 'Quantity:', this.quantity);
-      // TODO: Implement checkout functionality
-      alert('Proceeding to checkout...');
-    }
+    this.addToCart();
+    this.router.navigate(['/cart']);
   }
 
   // Helper method to format date

@@ -1,7 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { ProductSearchResponse } from '../../../../../core/models/product.model';
+import { ProductSearchResponse, ProductVariant } from '../../../../../core/models/product.model';
+import { CartService } from '../../../../../core/services/cart.service';
+import { ProductService } from '../../../../../core/services/product.service';
 
 @Component({
   selector: 'app-product-card',
@@ -13,7 +15,11 @@ import { ProductSearchResponse } from '../../../../../core/models/product.model'
 export class ProductCardComponent {
   @Input() product!: ProductSearchResponse;
   
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private cartService: CartService,
+    private productService: ProductService
+  ) {}
   
   viewProductDetails() {
     console.log('ProductCard: Navigating to product detail with ID:', this.product.id);
@@ -31,9 +37,26 @@ export class ProductCardComponent {
     event.stopPropagation();
     
     console.log('Adding product to cart:', this.product.id);
-    // TODO: Implement actual cart functionality
     
-    // Show a temporary success message
-    alert('Product added to cart!');
+    // Get the full product details to access variants
+    this.productService.getProductById(this.product.id).subscribe({
+      next: (fullProduct) => {
+        if (fullProduct.variants && fullProduct.variants.length > 0) {
+          // Use the first variant by default
+          const defaultVariant = fullProduct.variants[0];
+          // Add to cart with quantity 1
+          this.cartService.addToCart(fullProduct, defaultVariant, 1);
+          
+          // Show a success message
+          alert('Product added to cart!');
+        } else {
+          alert('Sorry, this product is not available at the moment.');
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching product details:', error);
+        alert('Error adding product to cart. Please try again.');
+      }
+    });
   }
 } 

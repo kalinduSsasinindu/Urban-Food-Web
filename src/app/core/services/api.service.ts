@@ -59,7 +59,7 @@ export class ApiService {
 
   post<T>(url: string, body: any, headers?: { [key: string]: string }, isSecured: boolean = true): Observable<T> {
     return this.http.post<T>(url, body, {
-      headers: this.createHeaders(headers)
+      headers: this.createHeaders(headers, isSecured)
     });
   }
 

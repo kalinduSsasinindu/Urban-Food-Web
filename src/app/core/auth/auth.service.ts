@@ -201,4 +201,16 @@ export class AuthService {
   clearRedirectUrl() {
     sessionStorage.removeItem(this.REDIRECT_URL_KEY);
   }
+
+  isLoggedIn(): boolean {
+    const token = sessionStorage.getItem(this.TOKEN_KEY);
+    const expiresAt = sessionStorage.getItem(this.EXPIRES_AT_KEY);
+    
+    if (!token || !expiresAt) {
+      return false;
+    }
+    
+    // Check if token is expired
+    return Date.now() < Number(expiresAt);
+  }
 }

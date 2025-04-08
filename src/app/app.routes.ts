@@ -10,6 +10,7 @@ import { SellerLayoutComponent } from './layout/seller-layout/seller-layout.comp
 import { SellerProfileLayoutComponent } from './layout/seller-profile-layout/seller-profile-layout.component';
 import { CustomerProfileLayoutComponent } from './layout/customer-profile-layout/customer-profile-layout.component';
 import { ProductDetailComponent } from './features/shop/components/products/product-detail/product-detail.component';
+import { adminGuard } from './core/auth/admin.guard';
 
 export const routes: Routes = [
   { 
@@ -19,6 +20,16 @@ export const routes: Routes = [
   { 
     path: 'cart', 
     component: CartComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'checkout',
+    loadComponent: () => import('./features/shop/components/checkout/checkout.component').then(m => m.CheckoutComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'order-confirmation/:id',
+    loadComponent: () => import('./features/shop/components/order-confirmation/order-confirmation.component').then(m => m.OrderConfirmationComponent),
     canActivate: [authGuard]
   },
   {
@@ -86,6 +97,16 @@ export const routes: Routes = [
         loadComponent: () => import('./features/user-account/components/profile/profile.component').then(m => m.ProfileComponent)
       }
     ]
+  },
+  {
+    path: 'account/orders',
+    loadComponent: () => import('./features/user-account/components/orders/user-orders.component').then(m => m.UserOrdersComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'order-details/:id',
+    loadComponent: () => import('./features/shop/components/order-detail/order-detail.component').then(m => m.OrderDetailComponent),
+    canActivate: [authGuard]
   },
   { 
     path: '', 
