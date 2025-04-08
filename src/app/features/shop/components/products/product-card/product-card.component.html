@@ -1,5 +1,5 @@
-<div class="product-card" (click)="viewProductDetails()">
-  <div class="product-image-container">
+<div class="product-card">
+  <div class="product-image-container" (click)="viewProductDetails()">
     <img [src]="product.imgUrl || 'assets/placeholder-image.jpg'" [alt]="product.title" class="product-image">
   </div>
   <div class="product-info">
@@ -10,6 +10,8 @@
     </div>
     <div class="tax-info">Tax excluded, add at checkout if applicable : Extra 2% off with coins</div>
     
-    <h3 class="product-title">{{ product.title }}</h3>
+    <h3 class="product-title" (click)="viewProductDetails()">{{ product.title }}</h3>
+    
+    <button class="add-to-cart-btn" (click)="addToCart($event)">Add to cart</button>
   </div>
 </div> 
