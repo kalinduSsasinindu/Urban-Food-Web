@@ -142,10 +142,11 @@
       <div class="form-group">
         <label>Rating</label>
         <div class="rating-selector">
-          <i *ngFor="let star of [1, 2, 3, 4, 5]"
-             class="fa"
-             [ngClass]="{'fa-star': star <= newReview.rating!, 'fa-star-o': star > newReview.rating!}"
-             (click)="newReview.rating = star"></i>
+          <i class="fa" [ngClass]="{'fa-star': newReview.rating >= 1, 'fa-star-o': newReview.rating < 1}" (click)="newReview.rating = 1"></i>
+          <i class="fa" [ngClass]="{'fa-star': newReview.rating >= 2, 'fa-star-o': newReview.rating < 2}" (click)="newReview.rating = 2"></i>
+          <i class="fa" [ngClass]="{'fa-star': newReview.rating >= 3, 'fa-star-o': newReview.rating < 3}" (click)="newReview.rating = 3"></i>
+          <i class="fa" [ngClass]="{'fa-star': newReview.rating >= 4, 'fa-star-o': newReview.rating < 4}" (click)="newReview.rating = 4"></i>
+          <i class="fa" [ngClass]="{'fa-star': newReview.rating >= 5, 'fa-star-o': newReview.rating < 5}" (click)="newReview.rating = 5"></i>
         </div>
       </div>
       
