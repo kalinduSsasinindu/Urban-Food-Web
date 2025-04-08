@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductCardComponent } from '../products/product-card/product-card.component';
 import { ProductService } from '../../../../core/services/product.service';
-import { Product, ProductType } from '../../../../core/models/product.model';
+import { Product, ProductSearchResponse, ProductType } from '../../../../core/models/product.model';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -13,7 +13,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./landing.component.css']
 })
 export class LandingComponent implements OnInit {
-  products: Product[] = [];
+  products: ProductSearchResponse[] = [];
 
   constructor(
     private productService: ProductService,
@@ -29,9 +29,17 @@ export class LandingComponent implements OnInit {
 
   loadProducts(productType?: ProductType) {
     this.productService.getProductsByProductType(productType).subscribe({
-      next: (products) => {
-        this.products = products;
-        console.log('Loaded products:', products);
+      next: (fullProducts) => {
+        // Map full Product objects to ProductSearchResponse format
+        this.products = fullProducts.map(product => ({
+          id: product.id,
+          title: product.title,
+          description: product.description,
+          imgUrl: product.imgUrls?.[0] || '',
+          price: product.variants[0]?.price || 0,
+          tags: product.tags || []
+        }));
+        console.log('Loaded products:', this.products);
       },
       error: (error) => {
         console.error('Error loading products:', error);
