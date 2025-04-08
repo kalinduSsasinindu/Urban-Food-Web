@@ -24,8 +24,9 @@ export class OrderService {
     return this.apiService.get<Order>(`${this.apiUrl}/${orderId}`);
   }
 
-  createOrder(order: Order): Observable<{ id: string }> {
-    return this.apiService.post<{ id: string }>(this.apiUrl, order);
+  
+  createOrder(orderData: any): Observable<any> {
+    return this.apiService.post(`${environment.baseAPIUrl}Order`, orderData);
   }
 
   addTimelineEntry(orderId: string, timelineDetails: TimeLineDetails): Observable<any> {
