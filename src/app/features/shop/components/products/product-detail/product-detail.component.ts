@@ -29,10 +29,10 @@ export class ProductDetailComponent implements OnInit {
   ProductType = ProductType; // Make enum available to template
   
   // New fields for review functionality
-  newReview: CreateProductReviewDto = {
+  newReview = {
     rating: 5,
     comment: '',
-    reviewImages: []
+    reviewImages: [] as string[]
   };
   showReviewForm = false;
   reviewSubmitting = false;
