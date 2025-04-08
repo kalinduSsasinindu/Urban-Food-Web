@@ -1,16 +1,15 @@
-<div class="product-card">
-  <img [src]="product.imgUrl || 'assets/placeholder-image.jpg'" [alt]="product.title" class="product-image">
+<div class="product-card" (click)="viewProductDetails()">
+  <div class="product-image-container">
+    <img [src]="product.imgUrl || 'assets/placeholder-image.jpg'" [alt]="product.title" class="product-image">
+  </div>
   <div class="product-info">
-    <div class="product-header">
-      <h3>{{ product.title }}</h3>
-      <div class="tags" *ngIf="product.tags && product.tags.length > 0">
-        <span *ngFor="let tag of product.tags" class="tag">{{ tag }}</span>
-      </div>
+    <div class="price-section">
+      <span class="current-price">LKR{{ product.price.toFixed(2) }}</span>
+      <span class="original-price" *ngIf="product.originalPrice">LKR{{ product.originalPrice.toFixed(2) }}</span>
+      <span class="discount-badge" *ngIf="product.discountPercentage">{{ product.discountPercentage }}% off</span>
     </div>
-    <p class="description">{{ product.description }}</p>
-    <div class="product-footer">
-      <div class="price">${{ product.price.toFixed(2) }}</div>
-      <button class="view-btn">View Details</button>
-    </div>
+    <div class="tax-info">Tax excluded, add at checkout if applicable : Extra 2% off with coins</div>
+    
+    <h3 class="product-title">{{ product.title }}</h3>
   </div>
 </div> 

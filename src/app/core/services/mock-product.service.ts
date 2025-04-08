@@ -18,48 +18,90 @@ export class MockProductService {
       title: 'Organic Avocados',
       description: 'Perfectly ripened organic avocados from California, rich and creamy texture perfect for guacamole or toast',
       price: 4.99,
+      originalPrice: 6.99,
+      discountPercentage: 29,
+      rating: 4.8,
+      reviewsCount: 124,
+      soldCount: 587,
+      deliveryTime: 'Apr 16 - 20',
       imgUrl: 'https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?q=80&w=1000',
-      tags: ['Produce', 'Organic', 'Healthy']
+      tags: ['Produce', 'Organic', 'Healthy'],
+      variants: ['Small', 'Medium', 'Large']
     },
     {
       id: '4',
       title: 'Fresh Berry Mix',
       description: 'Assortment of fresh seasonal berries including strawberries, blueberries, and raspberries, perfect for smoothies or desserts',
       price: 6.99,
+      originalPrice: 9.99,
+      discountPercentage: 30,
+      rating: 4.9,
+      reviewsCount: 89,
+      soldCount: 342,
+      deliveryTime: 'Apr 15 - 19',
       imgUrl: 'https://images.unsplash.com/photo-1577069861033-55d04cec4ef5?q=80&w=1000',
-      tags: ['Produce', 'Fresh', 'Seasonal']
+      tags: ['Produce', 'Fresh', 'Seasonal'],
+      variants: ['250g', '500g', '1kg']
     },
     {
       id: '5',
       title: 'Extra Virgin Olive Oil',
       description: 'Cold-pressed extra virgin olive oil from Italian olives, rich flavor with peppery finish, perfect for dressing and cooking',
       price: 12.99,
+      originalPrice: 15.99,
+      discountPercentage: 19,
+      rating: 4.7,
+      reviewsCount: 256,
+      soldCount: 1024,
+      deliveryTime: 'Apr 17 - 21',
       imgUrl: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?q=80&w=1000',
-      tags: ['Pantry', 'Imported', 'Premium']
+      tags: ['Pantry', 'Imported', 'Premium'],
+      variants: ['250ml', '500ml', '1L']
     },
     {
       id: '6',
       title: 'Artisan Cheese Selection',
       description: 'Curated selection of artisanal cheeses from local dairies, includes soft, semi-soft, and aged varieties',
       price: 24.99,
+      originalPrice: 29.99,
+      discountPercentage: 17,
+      rating: 4.9,
+      reviewsCount: 178,
+      soldCount: 652,
+      deliveryTime: 'Apr 14 - 18',
       imgUrl: 'https://images.unsplash.com/photo-1452195100486-9cc805987862?q=80&w=1000',
-      tags: ['Dairy', 'Artisan', 'Local']
+      tags: ['Dairy', 'Artisan', 'Local'],
+      variants: ['Small Box', 'Medium Box', 'Large Box']
     },
     {
       id: '7',
       title: 'Organic Wild Honey',
       description: 'Raw, unfiltered wildflower honey from sustainable apiaries, rich and complex flavor profile',
       price: 9.99,
+      originalPrice: 12.99,
+      discountPercentage: 23,
+      rating: 4.8,
+      reviewsCount: 145,
+      soldCount: 892,
+      deliveryTime: 'Apr 18 - 22',
       imgUrl: 'https://images.unsplash.com/photo-1587049352851-8d4e89133924?q=80&w=1000',
-      tags: ['Pantry', 'Organic', 'Natural']
+      tags: ['Pantry', 'Organic', 'Natural'],
+      variants: ['250g', '500g', '1kg']
     },
     {
       id: '8',
       title: 'Premium Sushi Grade Salmon',
       description: 'Fresh, sustainably sourced salmon fillets suitable for sashimi, sushi, or cooking, rich in omega-3 fatty acids',
       price: 18.99,
+      originalPrice: 24.99,
+      discountPercentage: 24,
+      rating: 4.9,
+      reviewsCount: 203,
+      soldCount: 726,
+      deliveryTime: 'Apr 13 - 16',
       imgUrl: 'https://images.unsplash.com/photo-1559548331-f9cb98001426?q=80&w=1000',
-      tags: ['Seafood', 'Fresh', 'Premium']
+      tags: ['Seafood', 'Fresh', 'Premium'],
+      variants: ['200g', '400g', '800g']
     }
   ];
 
@@ -70,12 +112,20 @@ export class MockProductService {
     imgUrls: [p.imgUrl],
     images: [p.imgUrl],
     tags: p.tags,
+    price: p.price,
+    originalPrice: p.originalPrice,
+    discountPercentage: p.discountPercentage,
+    rating: p.rating,
+    reviewsCount: p.reviewsCount,
+    soldCount: p.soldCount,
     variants: [
       {
         variantId: 1,
         sku: `SKU-${p.id}-1`,
         name: `${p.title} - Standard`,
         price: p.price,
+        originalPrice: p.originalPrice,
+        discountPercentage: p.discountPercentage,
         availableQuantity: 100,
         committedQuantity: 0,
         isActive: true
@@ -84,7 +134,7 @@ export class MockProductService {
     options: [
       {
         name: 'Size',
-        values: ['Small', 'Medium', 'Large']
+        values: p.variants || ['Small', 'Medium', 'Large']
       }
     ]
   }));
