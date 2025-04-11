@@ -10,6 +10,8 @@ export interface CartItem {
   imageUrl: string;
   variantTitle?: string;
   maxQuantity?: number;
+  sellerId?: string;
+  sellerName?: string;
 }
 
 export interface Cart {

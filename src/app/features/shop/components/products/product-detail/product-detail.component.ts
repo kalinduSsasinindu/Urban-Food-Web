@@ -4,6 +4,7 @@ import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../../../../core/services/product.service';
 import { CartService } from '../../../../../core/services/cart.service';
+import { AuthService } from '../../../../../core/auth/auth.service';
 import { 
   Product, 
   ProductType, 
@@ -43,21 +44,31 @@ export class ProductDetailComponent implements OnInit {
   };
   selectedRatingFilter: number | null = null;
   filteredReviews: ProductReview[] = [];
+  currentUserId: string = '';
 
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
     private cartService: CartService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
+    // Get current user ID for highlighting user's reviews
+    this.currentUserId = this.authService.getClientIdFromLocalStorage();
+    
     this.route.paramMap.subscribe(params => {
       this.productId = params.get('id');
       if (this.productId) {
         this.loadProductDetails(this.productId);
       }
     });
+  }
+
+  // Check if a review belongs to the current user
+  isCurrentUserReview(review: ProductReview): boolean {
+    return !!this.currentUserId && !!review.reviewerId && review.reviewerId === this.currentUserId;
   }
 
   loadProductDetails(id: string): void {
@@ -84,10 +95,15 @@ export class ProductDetailComponent implements OnInit {
   loadProductReviews(productId: string): void {
     this.loadingReviews = true;
     
-    this.productService.getProductReviews(productId).subscribe({
+    // Using the new method to get all reviews without user filtering
+    this.productService.getAllProductReviews(productId).subscribe({
       next: (reviews) => {
         this.reviews = reviews;
-        this.filteredReviews = [...reviews];
+        
+        // Sort reviews: Current user's reviews first, then by date descending
+        this.sortReviews();
+        
+        this.filteredReviews = [...this.reviews];
         this.loadingReviews = false;
         
         // Calculate rating distribution
@@ -99,6 +115,23 @@ export class ProductDetailComponent implements OnInit {
         console.error('Error loading product reviews:', err);
         this.loadingReviews = false;
       }
+    });
+  }
+
+  // Sort reviews to show current user's reviews at the top
+  sortReviews(): void {
+    this.reviews.sort((a, b) => {
+      // Current user's reviews first
+      const aIsCurrentUser = this.isCurrentUserReview(a);
+      const bIsCurrentUser = this.isCurrentUserReview(b);
+      
+      if (aIsCurrentUser && !bIsCurrentUser) return -1;
+      if (!aIsCurrentUser && bIsCurrentUser) return 1;
+      
+      // Then sort by date (newest first)
+      const aDate = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      const bDate = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      return bDate - aDate;
     });
   }
 
@@ -138,8 +171,12 @@ export class ProductDetailComponent implements OnInit {
         this.reviewSubmitting = false;
         this.showReviewForm = false;
         
-        // Add the new review to the list and recalculate stats
+        // Add the new review to the list
         this.reviews.unshift(review);
+        
+        // Resort to ensure proper ordering
+        this.sortReviews();
+        
         this.filteredReviews = [...this.reviews];
         this.calculateRatingDistribution();
         

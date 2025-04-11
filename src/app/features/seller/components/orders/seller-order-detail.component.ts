@@ -3,29 +3,15 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { OrderService } from '../../../../core/services/order.service';
 import { Order } from '../../../../core/models/order.model';
-import { AuthService } from '../../../../core/auth/auth.service';
 
 @Component({
-  selector: 'app-order-detail',
+  selector: 'app-seller-order-detail',
   standalone: true,
   imports: [CommonModule, RouterLink],
   template: `
     <div class="order-detail-container">
       <div class="breadcrumb">
-        <a routerLink="/account/orders">Orders</a> / Order Details
-      </div>
-
-      <div class="view-toggle">
-        <button 
-          [class.active]="!showGroupedBySeller" 
-          (click)="showGroupedBySeller = false; loadOrderDetails(orderId!)">
-          Standard View
-        </button>
-        <button 
-          [class.active]="showGroupedBySeller" 
-          (click)="showGroupedBySeller = true; loadGroupedOrder(orderId!)">
-          Group by Seller
-        </button>
+        <a routerLink="/seller/orders">Orders</a> / Order Details
       </div>
 
       <div class="order-detail-card" *ngIf="order; else loading">
@@ -43,32 +29,8 @@ import { AuthService } from '../../../../core/auth/auth.service';
         
         <div class="order-sections">
           <div class="order-section">
-            <h2>Items Ordered</h2>
-            
-            <div *ngIf="showGroupedBySeller && groupedOrders && groupedOrders.length > 0">
-              <div class="seller-group" *ngFor="let sellerOrder of groupedOrders">
-                <div class="seller-info" *ngIf="sellerOrder.lineItems && sellerOrder.lineItems.length > 0 && sellerOrder.lineItems[0].sellerName">
-                  <h3>Seller: {{ sellerOrder.lineItems[0].sellerName }}</h3>
-                </div>
-                <div class="items-list">
-                  <div class="item" *ngFor="let item of sellerOrder.lineItems">
-                    <div class="item-image" *ngIf="item.imageUrl">
-                      <img [src]="item.imageUrl" [alt]="item.title">
-                    </div>
-                    <div class="item-details">
-                      <h3>{{ item.title }}</h3>
-                      <p *ngIf="item.variantTitle">{{ item.variantTitle }}</p>
-                      <p class="item-price">LKR{{ item.price.toFixed(2) }} × {{ item.quantity }}</p>
-                    </div>
-                    <div class="item-total">
-                      LKR{{ (item.price * item.quantity).toFixed(2) }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="items-list" *ngIf="!showGroupedBySeller">
+            <h2>Your Products in This Order</h2>
+            <div class="items-list">
               <div class="item" *ngFor="let item of order.lineItems">
                 <div class="item-image" *ngIf="item.imageUrl">
                   <img [src]="item.imageUrl" [alt]="item.title">
@@ -76,7 +38,6 @@ import { AuthService } from '../../../../core/auth/auth.service';
                 <div class="item-details">
                   <h3>{{ item.title }}</h3>
                   <p *ngIf="item.variantTitle">{{ item.variantTitle }}</p>
-                  <p *ngIf="item.sellerName" class="seller-name">Seller: {{ item.sellerName }}</p>
                   <p class="item-price">LKR{{ item.price.toFixed(2) }} × {{ item.quantity }}</p>
                 </div>
                 <div class="item-total">
@@ -102,41 +63,23 @@ import { AuthService } from '../../../../core/auth/auth.service';
               <div class="payment-details">
                 <p><strong>Method:</strong> {{ getPaymentMethodDisplay(order.paymentInfo.paymentOption) }}</p>
                 <p><strong>Status:</strong> {{ order.financialStatus }}</p>
-                
-                <div class="bank-details" *ngIf="order.paymentInfo.paymentOption === 'BANK_TRANSFER'">
-                  <h3>Bank Transfer Details</h3>
-                  <p>Please transfer the payment to:</p>
-                  <p><strong>Bank:</strong> People's Bank</p>
-                  <p><strong>Account Name:</strong> Urban Food Web</p>
-                  <p><strong>Account Number:</strong> 123-456-789-10</p>
-                  <p><strong>Reference:</strong> {{ order.name || order.id }}</p>
-                </div>
               </div>
             </div>
           </div>
           
           <div class="order-section">
-            <h2>Order Summary</h2>
+            <h2>Your Items Summary</h2>
             <div class="order-summary">
               <div class="summary-row">
-                <span>Subtotal</span>
-                <span>LKR{{ order.subtotalPrice.toFixed(2) }}</span>
-              </div>
-              <div class="summary-row">
-                <span>Shipping</span>
-                <span>LKR{{ order.totalShippingPrice.toFixed(2) }}</span>
-              </div>
-              <div class="summary-row" *ngIf="order.totalDiscountPrice > 0">
-                <span>Discount</span>
-                <span>-LKR{{ order.totalDiscountPrice.toFixed(2) }}</span>
-              </div>
-              <div class="summary-row">
-                <span>Tax</span>
-                <span>LKR{{ (order.totalPrice - order.subtotalPrice - order.totalShippingPrice + order.totalDiscountPrice).toFixed(2) }}</span>
+                <span>Subtotal (Your Items)</span>
+                <span>LKR{{ calculateSubtotal().toFixed(2) }}</span>
               </div>
               <div class="summary-row total">
-                <span>Total</span>
-                <span>LKR{{ order.totalPrice.toFixed(2) }}</span>
+                <span>Total (Your Items)</span>
+                <span>LKR{{ calculateSubtotal().toFixed(2) }}</span>
+              </div>
+              <div class="note">
+                <em>Note: This summary shows only the amount for your products in this order.</em>
               </div>
             </div>
           </div>
@@ -157,8 +100,8 @@ import { AuthService } from '../../../../core/auth/auth.service';
         </div>
         
         <div class="order-actions">
-          <a routerLink="/account/orders" class="back-btn">Back to Orders</a>
-          <button *ngIf="canCancelOrder()" class="cancel-btn" (click)="cancelOrder()">Cancel Order</button>
+          <a routerLink="/seller/orders" class="back-btn">Back to Orders</a>
+          <button *ngIf="canUpdateStatus()" class="update-btn">Update Fulfillment Status</button>
         </div>
       </div>
       
@@ -189,52 +132,6 @@ import { AuthService } from '../../../../core/auth/auth.service';
     
     .breadcrumb a:hover {
       text-decoration: underline;
-    }
-    
-    .view-toggle {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-    
-    .view-toggle button {
-      padding: 0.5rem 1rem;
-      border: 1px solid #ddd;
-      background-color: #f9f9f9;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    
-    .view-toggle button.active {
-      background-color: #3498db;
-      color: white;
-      border-color: #3498db;
-    }
-    
-    .seller-group {
-      margin-bottom: 1.5rem;
-      border: 1px solid #eee;
-      border-radius: 4px;
-      overflow: hidden;
-    }
-    
-    .seller-info {
-      background-color: #f9f9f9;
-      padding: 0.75rem 1rem;
-      border-bottom: 1px solid #eee;
-    }
-    
-    .seller-info h3 {
-      margin: 0;
-      font-size: 1rem;
-      color: #555;
-    }
-    
-    .seller-name {
-      font-size: 0.85rem;
-      color: #666;
-      margin: 0.25rem 0;
     }
     
     .order-detail-card {
@@ -302,50 +199,42 @@ import { AuthService } from '../../../../core/auth/auth.service';
     }
     
     .order-section {
-      padding-bottom: 2rem;
-      border-bottom: 1px solid #eee;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      padding: 1.5rem;
     }
     
-    .order-section:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
+    .order-section h2 {
+      margin-top: 0;
+      margin-bottom: 1.2rem;
+      font-size: 1.2rem;
+      color: #333;
     }
     
     .order-section-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-      padding-bottom: 2rem;
-      border-bottom: 1px solid #eee;
-    }
-    
-    h2 {
-      font-size: 1.2rem;
-      color: #333;
-      margin-bottom: 1.2rem;
-    }
-    
-    h3 {
-      font-size: 1.1rem;
-      margin: 0 0 0.5rem 0;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1rem;
     }
     
     .items-list {
       display: flex;
       flex-direction: column;
-      gap: 1.5rem;
+      gap: 1rem;
     }
     
     .item {
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      gap: 1.5rem;
-      align-items: center;
+      display: flex;
+      background-color: white;
+      border-radius: 4px;
+      padding: 1rem;
+      gap: 1rem;
     }
     
     .item-image {
       width: 80px;
       height: 80px;
+      flex-shrink: 0;
     }
     
     .item-image img {
@@ -355,50 +244,48 @@ import { AuthService } from '../../../../core/auth/auth.service';
       border-radius: 4px;
     }
     
+    .item-details {
+      flex-grow: 1;
+    }
+    
+    .item-details h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1rem;
+    }
+    
     .item-details p {
-      margin: 0.2rem 0;
+      margin: 0 0 0.5rem 0;
       color: #666;
+      font-size: 0.9rem;
     }
     
     .item-price {
-      font-weight: 500;
-    }
-    
-    .item-total {
-      font-weight: 600;
-      font-size: 1.1rem;
-    }
-    
-    .address-details p, .payment-details p {
-      margin: 0.5rem 0;
       color: #555;
     }
     
-    .bank-details {
-      margin-top: 1rem;
-      padding: 1rem;
-      background-color: #f8f9fa;
-      border-radius: 4px;
+    .item-total {
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      color: #333;
     }
     
-    .bank-details h3 {
-      font-size: 1rem;
-      margin-bottom: 0.5rem;
-    }
-    
-    .bank-details p {
-      margin: 0.3rem 0;
+    .address-details p, .payment-details p {
+      margin: 0 0 0.5rem 0;
+      color: #555;
     }
     
     .order-summary {
-      max-width: 400px;
-      margin-left: auto;
+      background-color: white;
+      border-radius: 4px;
+      padding: 1.2rem;
     }
     
     .summary-row {
       display: flex;
       justify-content: space-between;
       margin-bottom: 0.8rem;
+      color: #555;
     }
     
     .summary-row.total {
@@ -407,7 +294,13 @@ import { AuthService } from '../../../../core/auth/auth.service';
       font-size: 1.1rem;
       margin-top: 1rem;
       padding-top: 1rem;
-      border-top: 1px solid #ddd;
+      border-top: 1px solid #eee;
+    }
+    
+    .note {
+      margin-top: 1rem;
+      color: #777;
+      font-size: 0.85rem;
     }
     
     .timeline {
@@ -417,23 +310,17 @@ import { AuthService } from '../../../../core/auth/auth.service';
     }
     
     .timeline-entry {
-      display: grid;
-      grid-template-columns: 150px 1fr;
+      display: flex;
       gap: 1rem;
+      background-color: white;
+      border-radius: 4px;
+      padding: 1rem;
     }
     
     .timeline-date {
+      min-width: 120px;
       color: #777;
       font-size: 0.9rem;
-    }
-    
-    .timeline-status {
-      font-weight: 500;
-      margin-bottom: 0.3rem;
-    }
-    
-    .timeline-comment {
-      color: #555;
     }
     
     .order-actions {
@@ -442,12 +329,11 @@ import { AuthService } from '../../../../core/auth/auth.service';
       margin-top: 2rem;
     }
     
-    .back-btn, .cancel-btn {
+    .back-btn, .update-btn {
       padding: 0.8rem 1.5rem;
       border-radius: 4px;
-      text-decoration: none;
       font-weight: 500;
-      transition: background-color 0.3s;
+      text-decoration: none;
       cursor: pointer;
     }
     
@@ -457,18 +343,10 @@ import { AuthService } from '../../../../core/auth/auth.service';
       border: 1px solid #ddd;
     }
     
-    .back-btn:hover {
-      background-color: #e8e8e8;
-    }
-    
-    .cancel-btn {
-      background-color: #f44336;
+    .update-btn {
+      background-color: #3498db;
       color: white;
       border: none;
-    }
-    
-    .cancel-btn:hover {
-      background-color: #d32f2f;
     }
     
     .loading-container {
@@ -476,15 +354,15 @@ import { AuthService } from '../../../../core/auth/auth.service';
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 300px;
+      padding: 4rem 0;
     }
     
     .spinner {
       border: 4px solid rgba(0, 0, 0, 0.1);
       border-radius: 50%;
       border-top: 4px solid #3498db;
-      width: 40px;
-      height: 40px;
+      width: 30px;
+      height: 30px;
       animation: spin 1s linear infinite;
       margin-bottom: 1rem;
     }
@@ -495,96 +373,54 @@ import { AuthService } from '../../../../core/auth/auth.service';
     }
     
     @media (max-width: 768px) {
-      .order-section-grid {
-        grid-template-columns: 1fr;
+      .order-detail-card {
+        padding: 1.5rem;
+      }
+      
+      .order-header {
+        flex-direction: column;
+      }
+      
+      .order-status {
+        margin-top: 1rem;
       }
       
       .item {
-        grid-template-columns: 1fr;
+        flex-direction: column;
       }
       
       .item-image {
-        margin: 0 auto;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1/1;
       }
       
       .item-total {
-        text-align: right;
+        align-self: flex-end;
       }
     }
   `]
 })
-export class OrderDetailComponent implements OnInit {
+export class SellerOrderDetailComponent implements OnInit {
   order: Order | null = null;
   orderId: string | null = null;
   error: string | null = null;
-  isSeller = false;
-  showGroupedBySeller = false;
-  groupedOrders: Order[] = [];
   
   constructor(
     private route: ActivatedRoute,
-    private orderService: OrderService,
-    private authService: AuthService
+    private orderService: OrderService
   ) {}
   
   ngOnInit(): void {
-    // Check if the user is a seller
-    this.checkUserRole();
-    
     this.route.paramMap.subscribe(params => {
       this.orderId = params.get('id');
       if (this.orderId) {
-        if (this.isSeller) {
-          this.loadSellerOrderDetails(this.orderId);
-        } else {
-          if (this.showGroupedBySeller) {
-            this.loadGroupedOrder(this.orderId);
-          } else {
-            this.loadOrderDetails(this.orderId);
-          }
-        }
+        this.loadOrderDetails(this.orderId);
       }
     });
-  }
-  
-  checkUserRole(): void {
-    // This is a placeholder - you'll need to implement role checking
-    // based on your authentication system
-    // For example:
-    // this.isSeller = this.authService.getUserRole() === 'Seller';
   }
   
   loadOrderDetails(orderId: string): void {
-    this.orderService.getOrderById(orderId).subscribe({
-      next: (order) => {
-        this.order = order;
-      },
-      error: (error) => {
-        console.error('Error loading order details:', error);
-        this.error = 'Could not load order details. Please try again later.';
-      }
-    });
-  }
-  
-  loadGroupedOrder(orderId: string): void {
-    this.orderService.getCustomerOrderGroupedBySeller(orderId).subscribe({
-      next: (orders) => {
-        this.groupedOrders = orders;
-        if (orders.length > 0) {
-          this.order = orders[0]; // Use the first order for common details
-        }
-      },
-      error: (error) => {
-        console.error('Error loading grouped order details:', error);
-        this.error = 'Could not load order details. Please try again later.';
-        // Fallback to regular order view
-        this.showGroupedBySeller = false;
-        this.loadOrderDetails(orderId);
-      }
-    });
-  }
-  
-  loadSellerOrderDetails(orderId: string): void {
     this.orderService.getSellerOrderDetail(orderId).subscribe({
       next: (order) => {
         this.order = order;
@@ -594,6 +430,14 @@ export class OrderDetailComponent implements OnInit {
         this.error = 'Could not load order details. Please try again later.';
       }
     });
+  }
+  
+  calculateSubtotal(): number {
+    if (!this.order || !this.order.lineItems) return 0;
+    
+    return this.order.lineItems.reduce((total, item) => {
+      return total + (item.price * item.quantity);
+    }, 0);
   }
   
   getPaymentMethodDisplay(paymentOption: string): string {
@@ -631,32 +475,10 @@ export class OrderDetailComponent implements OnInit {
     return '';
   }
   
-  canCancelOrder(): boolean {
+  canUpdateStatus(): boolean {
     if (!this.order || !this.order.fulfillmentStatus) return false;
     
-    // Allow cancellation only if the order is in certain states
-    const status = this.order.fulfillmentStatus.toLowerCase();
-    return (status.includes('pending') || status.includes('unfulfilled')) && 
-           !status.includes('shipped') && 
-           !status.includes('delivered') && 
-           !this.order.isCancelled;
-  }
-  
-  cancelOrder(): void {
-    if (!this.order || !this.orderId) return;
-    
-    if (confirm('Are you sure you want to cancel this order? This action cannot be undone.')) {
-      this.orderService.cancelOrder(this.orderId).subscribe({
-        next: () => {
-          // Refresh order details after cancellation
-          this.loadOrderDetails(this.orderId!);
-          alert('Order has been cancelled successfully.');
-        },
-        error: (error) => {
-          console.error('Error cancelling order:', error);
-          alert('Failed to cancel order. Please try again later.');
-        }
-      });
-    }
+    // Allow status update only if the order is not cancelled
+    return !this.order.isCancelled;
   }
 } 

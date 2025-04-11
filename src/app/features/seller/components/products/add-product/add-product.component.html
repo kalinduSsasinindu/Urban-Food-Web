@@ -41,6 +41,23 @@
           rows="5" 
           placeholder="Add a detailed description of your product"></textarea>
       </div>
+      
+      <div class="form-field">
+        <label for="productType">Product Type*</label>
+        <select 
+          id="productType" 
+          formControlName="productType" 
+          [class.error]="productForm.get('productType')?.invalid && productForm.get('productType')?.touched">
+          <option [ngValue]="ProductType.Fruit">Fruit</option>
+          <option [ngValue]="ProductType.Vegetable">Vegetable</option>
+          <option [ngValue]="ProductType.DairyProduct">Dairy Product</option>
+          <option [ngValue]="ProductType.BakedGood">Baked Good</option>
+          <option [ngValue]="ProductType.HandmadeCraft">Handmade Craft</option>
+        </select>
+        <div *ngIf="productForm.get('productType')?.invalid && productForm.get('productType')?.touched" class="error-text">
+          Product type is required
+        </div>
+      </div>
     </div>
 
     <!-- Media Card -->

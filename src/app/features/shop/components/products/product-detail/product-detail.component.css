@@ -1079,4 +1079,41 @@ textarea:focus {
 .submit-btn:disabled {
   background-color: #ffb8b8;
   cursor: not-allowed;
+}
+
+/* Styling for current user's reviews */
+.review-item.my-review {
+  background-color: rgba(225, 242, 254, 0.5);
+  border-left: 3px solid #3498db;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.my-review-badge {
+  display: inline-block;
+  background-color: #3498db;
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 10px;
+  margin-left: 8px;
+  font-weight: normal;
+}
+
+/* Ensure user's review shows at the top of the list if sorting is appropriate */
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Make sure all styles for review items are properly included */
+.review-item {
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #eaeaea;
+  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.review-item:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 } 

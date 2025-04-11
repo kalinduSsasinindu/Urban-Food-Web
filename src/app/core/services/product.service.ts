@@ -193,9 +193,14 @@ export class ProductService {
     return this.apiService.get<Product>(`${this.apiUrl}/customergetproductdetailsbyid/${id}`);
   }
 
-  // Get product reviews
+  // Get product reviews (with user filtering)
   getProductReviews(productId: string): Observable<ProductReview[]> {
     return this.apiService.get<ProductReview[]>(`${this.apiUrl}/${productId}/reviews`);
+  }
+
+  // Get all product reviews (without user filtering)
+  getAllProductReviews(productId: string): Observable<ProductReview[]> {
+    return this.apiService.get<ProductReview[]>(`${this.apiUrl}/${productId}/all-reviews`);
   }
 
   // Get product review summary

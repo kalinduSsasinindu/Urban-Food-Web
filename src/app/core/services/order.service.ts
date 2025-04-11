@@ -24,9 +24,8 @@ export class OrderService {
     return this.apiService.get<Order>(`${this.apiUrl}/${orderId}`);
   }
 
-  
   createOrder(orderData: any): Observable<any> {
-    return this.apiService.post(`${environment.baseAPIUrl}Order`, orderData);
+    return this.apiService.post(`${this.apiUrl}`, orderData);
   }
 
   addTimelineEntry(orderId: string, timelineDetails: TimeLineDetails): Observable<any> {
@@ -67,5 +66,23 @@ export class OrderService {
 
   addTagToOrder(orderId: string, tagNames: string[]): Observable<any> {
     return this.apiService.post<any>(`${this.apiUrl}/${orderId}/add-tag`, tagNames);
+  }
+
+  // New seller specific endpoints
+  getSellerOrders(): Observable<OrderSearchResponse[]> {
+    return this.apiService.get<OrderSearchResponse[]>(`${this.apiUrl}/seller`);
+  }
+
+  getSellerOrderDetail(orderId: string): Observable<Order> {
+    return this.apiService.get<Order>(`${this.apiUrl}/seller/${orderId}`);
+  }
+
+  // New customer specific endpoints
+  getCustomerOrders(): Observable<OrderSearchResponse[]> {
+    return this.apiService.get<OrderSearchResponse[]>(`${this.apiUrl}/customer`);
+  }
+
+  getCustomerOrderGroupedBySeller(orderId: string): Observable<Order[]> {
+    return this.apiService.get<Order[]>(`${this.apiUrl}/customer/${orderId}/grouped`);
   }
 } 

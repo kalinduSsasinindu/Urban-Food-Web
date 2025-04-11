@@ -70,6 +70,10 @@ export const routes: Routes = [
         loadComponent: () => import('./features/seller/components/orders/orders.component').then(m => m.OrdersComponent)
       },
       {
+        path: 'orders/:id',
+        loadComponent: () => import('./features/seller/components/orders/seller-order-detail.component').then(m => m.SellerOrderDetailComponent)
+      },
+      {
         path: '',
         redirectTo: 'products',
         pathMatch: 'full'

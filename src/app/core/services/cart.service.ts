@@ -97,7 +97,9 @@ export class CartService {
         quantity: quantity,
         imageUrl: imageUrl,
         variantTitle: variant.name,
-        maxQuantity: variant.availableQuantity
+        maxQuantity: variant.availableQuantity,
+        sellerId: product.clientId || sessionStorage.getItem('client_id') || "unknown-seller",
+        sellerName: product.sellerName || "Unknown Seller"
       };
       currentCart.items.push(newItem);
     }

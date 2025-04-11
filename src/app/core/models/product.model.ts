@@ -20,6 +20,8 @@ export interface Product {
   averageRating?: number;
   reviewCount?: number;
   featuredReviewId?: string;
+  clientId?: string;
+  sellerName?: string;
 }
 
 export interface ProductReview {

@@ -214,13 +214,17 @@
 
   <div class="reviews-list" *ngIf="!loadingReviews && filteredReviews.length > 0">
     <!-- Review Item -->
-    <div class="review-item" *ngFor="let review of filteredReviews">
+    <div class="review-item" *ngFor="let review of filteredReviews" 
+         [class.my-review]="isCurrentUserReview(review)">
       <div class="reviewer-info">
         <div class="avatar" [ngStyle]="{'background-image': review.reviewerProfilePicture ? 'url(' + review.reviewerProfilePicture + ')' : 'none'}">
           <span *ngIf="!review.reviewerProfilePicture">{{review.reviewerName?.charAt(0) || 'U'}}</span>
         </div>
         <div class="name-date">
-          <div class="reviewer-name">{{review.reviewerName || 'Anonymous'}}</div>
+          <div class="reviewer-name">
+            {{review.reviewerName || 'Anonymous'}}
+            <span class="my-review-badge" *ngIf="isCurrentUserReview(review)">You</span>
+          </div>
           <div class="review-date">{{formatDate(review.createdAt)}}</div>
         </div>
       </div>

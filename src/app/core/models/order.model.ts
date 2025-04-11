@@ -17,6 +17,8 @@ export interface OrderSearchResponse {
   orderStatus: string;
   fulfillmentStatus: string;
   paymentStatus: string;
+  clientId?: string;
+  createdAt?: Date;
 }
 
 export interface LineItem {
@@ -30,6 +32,8 @@ export interface LineItem {
   variantTitle?: string;
   imageUrl?: string;
   variantId: number;
+  sellerId?: string;
+  sellerName?: string;
 }
 
 export interface ShippingAddress {
@@ -91,12 +95,14 @@ export interface Order {
   isCancelled?: boolean;
   timeLineDetails?: TimeLineDetails[];
   tags?: string[];
+  clientId?: string;
+  createdAt?: Date;
 }
 
 export interface OrderPaymentWebDto {
-  subtotalPrice?: number;
-  totalLineItemsPrice?: number;
-  totalPrice?: number;
-  totalShippingPrice?: number;
-  totalDiscountPrice?: number;
+  SubtotalPrice?: number;
+  TotalLineItemsPrice?: number;
+  TotalPrice?: number;
+  TotalShippingPrice?: number;
+  TotalDiscountPrice?: number;
 } 

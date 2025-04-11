@@ -60,7 +60,7 @@
   color: #333;
 }
 
-input, textarea {
+input, textarea, select {
   width: 100%;
   padding: 10px 12px;
   border: 1px solid #ccc;
@@ -69,12 +69,12 @@ input, textarea {
   transition: border-color 0.2s;
 }
 
-input:focus, textarea:focus {
+input:focus, textarea:focus, select:focus {
   outline: none;
   border-color: #4a90e2;
 }
 
-input.error, textarea.error {
+input.error, textarea.error, select.error {
   border-color: #d32f2f;
 }
 

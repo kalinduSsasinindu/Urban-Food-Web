@@ -257,7 +257,7 @@ export class UserOrdersComponent implements OnInit {
   
   loadOrders(): void {
     this.loading = true;
-    this.orderService.getOrders().subscribe({
+    this.orderService.getCustomerOrders().subscribe({
       next: (orders) => {
         this.orders = orders;
         this.loading = false;

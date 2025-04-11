@@ -571,7 +571,9 @@ export class CheckoutComponent implements OnInit {
           title: item.title,
           variantTitle: item.variantTitle || '',
           imageUrl: item.imageUrl,
-          variantId: parseInt(item.variantId.toString())
+          variantId: parseInt(item.variantId.toString()),
+          sellerId: item.sellerId || sessionStorage.getItem('client_id') || "unknown-seller",
+          sellerName: item.sellerName || "Unknown Seller"
         } as LineItem;
       }),
       paymentInfo: {
@@ -657,7 +659,9 @@ export class CheckoutComponent implements OnInit {
         title: item.title || "string",
         variantTitle: item.variantTitle || "string",
         imageUrl: item.imageUrl || "string",
-        variantId: item.variantId || 0
+        variantId: item.variantId || 0,
+        sellerId: item.sellerId || sessionStorage.getItem('client_id') || "unknown-seller",
+        sellerName: item.sellerName || "Unknown Seller"
       })),
       
       // Payment info - exactly matching backend structure

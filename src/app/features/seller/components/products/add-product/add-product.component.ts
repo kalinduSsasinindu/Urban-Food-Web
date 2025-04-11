@@ -830,4 +830,22 @@ export class AddProductComponent implements OnInit {
       );
     }
   }
+
+  // Helper method to get product type name from enum value
+  getProductTypeName(productType: ProductType): string {
+    switch(productType) {
+      case ProductType.Fruit:
+        return 'Fruit';
+      case ProductType.Vegetable:
+        return 'Vegetable';
+      case ProductType.DairyProduct:
+        return 'Dairy Product';
+      case ProductType.BakedGood:
+        return 'Baked Good';
+      case ProductType.HandmadeCraft:
+        return 'Handmade Craft';
+      default:
+        return 'Unknown';
+    }
+  }
 } 
