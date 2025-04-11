@@ -195,18 +195,18 @@ import { Cart, CartItem } from '../../../../core/models/cart.model';
     .checkout-btn {
       width: 100%;
       padding: 1rem;
-      background-color: #2ecc71;
+      background-color: #ff4747;
       color: white;
       border: none;
       border-radius: 4px;
       font-size: 1rem;
       cursor: pointer;
       margin-top: 1rem;
-      transition: background-color 0.3s ease;
+      transition: all 0.2s ease;
     }
 
     .checkout-btn:hover {
-      background-color: #27ae60;
+      background-color: #e63c3c;
     }
 
     .clear-cart-btn {
@@ -237,13 +237,18 @@ import { Cart, CartItem } from '../../../../core/models/cart.model';
 
     .continue-shopping-btn {
       padding: 0.8rem 1.5rem;
-      background-color: #3498db;
+      background-color: #ff4747;
       color: white;
       border: none;
       border-radius: 4px;
       font-size: 1rem;
       cursor: pointer;
       margin-top: 1rem;
+      transition: all 0.2s ease;
+    }
+
+    .continue-shopping-btn:hover {
+      background-color: #e63c3c;
     }
   `]
 })
